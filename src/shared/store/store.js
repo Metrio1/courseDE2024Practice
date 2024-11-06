@@ -27,11 +27,28 @@ export const createStore = (storageName) => {
               };
             });
           },
+
+          addMarkersList: (markersList) => {
+              set((state) => {
+
+                  const newMarkers = markersList.filter(
+                      (marker) => !state.markers.some((m) => m.id === marker.id)
+                  );
+                  return {
+                      markers: [...state.markers, ...newMarkers],
+                  };
+
+              });
+          },
+
           removeMarker: (markerId) =>
             set((state) => ({
               markers: state.markers.filter((marker) => marker.id !== markerId),
             })),
           setFilters: (filters) => set({ activeFilters: filters }),
+          clearFilters: () => set({ activeFilters: {} }),
+          removeMarkersList: () => set({ markers: [] })
+
         }),
         {
           name: storageName, // Используем переданное имя хранилища

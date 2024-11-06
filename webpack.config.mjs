@@ -106,6 +106,8 @@ export default async (env, { mode }) => {
         "#pages": path.resolve(__dirname, "src/pages"),
         "#widgets": path.resolve(__dirname, "src/widgets"),
         "#app": path.resolve(__dirname, "src/app"),
+        react: false,
+        'react-dom': false,
       },
       extensions: [".js", ".pcss"],
     },
