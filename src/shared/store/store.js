@@ -42,9 +42,10 @@ export const createStore = (storageName) => {
           },
 
           removeMarker: (markerId) =>
-            set((state) => ({
-              markers: state.markers.filter((marker) => marker.id !== markerId),
-            })),
+            set((state) => {
+              const updatedMarkers = state.markers.filter((marker) => marker.id !== markerId);
+              return { markers: updatedMarkers };
+            }),
           setFilters: (filters) => set({ activeFilters: filters }),
           clearFilters: () => set({ activeFilters: {} }),
           removeMarkersList: () => set({ markers: [] })

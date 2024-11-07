@@ -1,16 +1,14 @@
-import { createStore } from "#shared/store/store";
-import path from "path";
-
 export class StoreService {
-  constructor(storageName) {
-    this.store = createStore(storageName);
+  constructor(store) {
+    this.store = store;
     this.actionMap = {
       addMarker: (payload) => this.store.getState().addMarker(payload),
       removeMarker: (payload) => this.store.getState().removeMarker(payload),
       setFilters: (payload) => this.store.getState().setFilters(payload),
-      clearFilters: (payload) => this.store.getState().clearFilters(payload),
-      removeMarkersList: (payload) => this.store.getState().removeMarkersList(payload),
-      addMarkersList: (payload) => this.store.getState().addMarkersList(payload)
+      clearFilters: () => this.store.getState().clearFilters(),
+      removeMarkersList: () => this.store.getState().removeMarkersList(),
+      addMarkersList: (payload) => this.store.getState().addMarkersList(payload),
+      setMarkers: (payload) => this.store.getState().setMarkers(payload),
     };
   }
 

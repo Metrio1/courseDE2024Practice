@@ -1,18 +1,27 @@
 import { StoreService } from "#shared/lib/services/StoreService";
+import {API_ENDPOINTS} from "#shared/config/constants.js";
 
 export class MapApp {
-  constructor(storageName) {
-    this.storeService = new StoreService(storageName);
+  constructor(storeService, apiClient) {
+    this.storeService = storeService;
+    this.apiClient = apiClient;
     this.subscribeForStoreService();
 
-    console.debug(
-      "Тут будем реализовывать логику нашего виджета, вот готовый стор сервис ->",
-      this.storeService
-    );
+    this.fetchAndSetMarkers();
+  }
 
-    setTimeout(() => {
-      this.storeService.updateStore("addMarker", { id: 33144, value: "test" });
-    }, 5000);
+  async fetchAndSetMarkers() {
+    try {
+      const response = await this.apiClient.get(API_ENDPOINTS.marks.list);
+
+      if (response.isSuccess && response.data?.marks) {
+        this.storeService.updateStore("addMarkersList", response.data.marks);
+      } else {
+        console.warn("Не удалось получить метки", response);
+      }
+    } catch (error) {
+      console.error("Ошибка при получении меток", error);
+    }
   }
 
   handleMarkersChanged() {
