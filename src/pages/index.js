@@ -7,9 +7,10 @@ import {
   CinemaIcon,
   RestIcon,
   MusicIcon,
-  TheatreIcon,
+  TheatreIcon, LocationIcon, RouteIcon, DirectIcon,
 } from "#shared/ui/Icons/index";
 import { Switch } from "#shared/ui/Switch/index";
+import {MapButtons} from "#shared/ui/MapButtons/index.js";
 
 /**
  * Страница приложения
@@ -25,9 +26,28 @@ const IndexPage = () => `
     </head>
     <body>
       <header>
-        <h1>Welcome to the Home Page</h1>
       </header>
       <main>
+      <div class="mapLayout">
+        <aside class="mapLayout__filters">
+          ${Switch({ label: "Бары", labelPosition: "right" })}
+          ${Switch({ label: "Рестораны", labelPosition: "right" })}
+          ${Switch({ label: "ТРК", labelPosition: "right" })}
+          ${Switch({ label: "Театры", labelPosition: "right" })}
+          ${Switch({ label: "Кино", labelPosition: "right" })}
+        </aside>
+        <div class="mapLayout__map">
+          <div id="map1" class="yandexMap" style="width: 1407px; height: 658px;"></div>
+            ${MapButtons({
+              buttons: [
+                { text: "Добавить метку", iconSlot: LocationIcon() },
+                { text: "Построить маршрут", iconSlot: RouteIcon() },
+                { text: "Мои маршруты", iconSlot: DirectIcon() },
+              ],
+            })}
+        </div>
+        </div>
+      </div>
         <p>Hello world! 12</p>
         <div class="isFlex mb16 gap8">
           ${Button({ text: "Да", iconSlot: CheckIcon(), extraClasses: ["btn--isGreenLightIcon"] })}
@@ -155,7 +175,7 @@ const IndexPage = () => `
             },
           })}
         </div>
-        <div id="map1" class="yandexMap" style="width: 800px; aspect-ratio: 1 / 1"></div>
+        
       </main>
     </body>
   </html>

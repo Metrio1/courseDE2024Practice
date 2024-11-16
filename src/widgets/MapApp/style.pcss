@@ -1,0 +1,65 @@
+.mapLayout {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+
+    &__filters {
+        display: flex;
+        gap: 4rem;
+        font-size: 2rem;
+    }
+
+    &__map {
+        display: flex;
+        gap: 3.5rem;
+        position: relative;
+        border-radius: 1rem;
+        overflow: hidden;
+
+        .map-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            &__button {
+                border: none;
+                background-color: var(--colorWhite);
+                border-radius: 1rem;
+                display: flex;
+                gap: 1rem;
+                padding: 1.5rem 2rem;
+                font-size: 2rem;
+                align-items: center;
+                transition: var(--transition);
+
+                &:hover {
+                    background-color: var(--colorGrayLight);
+                }
+            }
+        }
+
+        .yandexMap {
+            width: 100%;
+            height: 600px;
+        }
+
+
+
+        .mapHint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--boxShadowDefault);
+            text-align: center;
+
+            p {
+                font-weight: bold;
+                margin-bottom: 0.5rem;
+            }
+        }
+    }
+}
