@@ -43,21 +43,21 @@ export class MapApp {
 
   async handleMarkerClick(e) {
     const {
-      detail: { id, mark },
+        detail: {id, mark},
     } = e;
 
-    try {
-      const res = await this.apiClient.get(API_ENDPOINTS.marks.detail, {
-        id: id,
-      });
-      const layout = this.yandexMap.getLayoutContentForBallon(res);
-      this.yandexMap.renderCustomBallon(id, mark, layout);
-    } catch (e) {
-      console.error(e);
-    }
-    }
+      try {
+          const res = await this.apiClient.get(API_ENDPOINTS.marks.detail, {
+              id: id,
+          });
+          const layout = this.yandexMap.getLayoutContentForBallon(res);
+          this.yandexMap.renderCustomBallon(id, mark, layout);
+      } catch (e) {
+          console.error(e);
+      }
+  }
 
-  async fetchAndSetMarkers() {
+    async fetchAndSetMarkers() {
     try {
       const response = await this.apiClient.get(API_ENDPOINTS.marks.list);
 
