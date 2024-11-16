@@ -50,11 +50,29 @@ export const createStore = (storageName) => {
               return { markers: updatedMarkers };
             });
           },
+
+          addMarkersList: (markersList) => {
+              set((state) => {
+
+                  const newMarkers = markersList.filter(
+                      (marker) => !state.markers.some((m) => m.id === marker.id)
+                  );
+                  return {
+                      markers: [...state.markers, ...newMarkers],
+                  };
+
+              });
+          },
+
           removeMarker: (markerId) =>
-            set((state) => ({
-              markers: state.markers.filter((marker) => marker.id !== markerId),
-            })),
+            set((state) => {
+              const updatedMarkers = state.markers.filter((marker) => marker.id !== markerId);
+              return { markers: updatedMarkers };
+            }),
           setFilters: (filters) => set({ activeFilters: filters }),
+          clearFilters: () => set({ activeFilters: {} }),
+          removeMarkersList: () => set({ markers: [] })
+
         }),
 
         {

@@ -1,9 +1,10 @@
 import "./styles.js";
-import { API_URL } from "#shared/config/constants";
+import { API_URL, API_ENDPOINTS } from "#shared/config/constants";
 import { ApiClient } from "#shared/lib/services/ApiClient.js";
-import { StoreService } from "#shared/lib/services/StoreService.js";
 import { ChoiceSelectModel } from "#shared/ui/CustomSelect/model/index.js";
 import { MapApp } from "#widgets/MapApp/model/index.js";
+import {StoreService} from "#shared/lib/services/StoreService";
+import {createStore} from "#shared/store/store";
 
 async function initMSW() {
   if (process.env.NODE_ENV === "development") {
@@ -28,7 +29,16 @@ function domReady() {
 
 Promise.all([initMSW(), domReady()]).then(() => {
   window.App = {};
+  const apiClient = new ApiClient(API_URL);
+  const storageName = "storageName";
+
+  const store = createStore(storageName);
+  const storeService = new StoreService(store);
+
+  new MapApp(storeService, apiClient);
+
   new ChoiceSelectModel();
   window.App.ChoiceSelectModel = ChoiceSelectModel;
-  new MapApp(new StoreService("mapAppStore"), new ApiClient(API_URL));
+
+  apiClient.get(API_ENDPOINTS.marks.list).then((res) => console.debug(res));
 });

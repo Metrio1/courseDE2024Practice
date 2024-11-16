@@ -1,6 +1,7 @@
 import { API_ENDPOINTS } from "#shared/config/constants";
 import { yandexMapCustomEventNames } from "#shared/ui/Map/config/constants";
 import { YandexMap } from "#shared/ui/Map/model";
+import { StoreService } from "#shared/lib/services/StoreService";
 
 export class MapApp {
   constructor(storeService, apiClient) {
@@ -25,6 +26,10 @@ export class MapApp {
       })
       .catch((e) => console.error(e));
 
+    this.storeService = storeService;
+    this.apiClient = apiClient;
+    this.fetchAndSetMarkers();
+
     this.#bindYandexMapEvents();
     this.subscribeForStoreService();
   }
@@ -34,6 +39,7 @@ export class MapApp {
       .get(API_ENDPOINTS.marks.list)
       .then((res) => res?.data?.marks);
   }
+
 
   async handleMarkerClick(e) {
     const {
@@ -49,7 +55,23 @@ export class MapApp {
     } catch (e) {
       console.error(e);
     }
+    }
+
+  async fetchAndSetMarkers() {
+    try {
+      const response = await this.apiClient.get(API_ENDPOINTS.marks.list);
+
+      if (response.isSuccess && response.data?.marks) {
+        this.storeService.updateStore("addMarkersList", response.data.marks);
+      } else {
+        console.warn("Не удалось получить метки", response);
+      }
+    } catch (error) {
+      console.error("Ошибка при получении меток", error);
+    }
   }
+
+
 
   handleMarkersChanged() {
     console.debug("markers changed", this.storeService.getMarkers());
