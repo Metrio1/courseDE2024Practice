@@ -38,6 +38,7 @@ const IndexPage = () => `
         </aside>
         <div class="mapLayout__map">
           <div id="map1" class="yandexMap" style="width: 1407px; height: 658px;"></div>
+<!--          <img src="assets/marksDetail/image1.jpg">-->
             ${MapButtons({
               buttons: [
                 { text: "Добавить метку", iconSlot: LocationIcon() },

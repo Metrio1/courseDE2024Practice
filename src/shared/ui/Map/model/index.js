@@ -4,6 +4,7 @@ import {
   yandexMapCustomEventNames,
   iconShapeCfg as defaultIconShapeCfg,
 } from "../config/constants.js";
+import Swiper from "swiper";
 import { checkMapInstance } from "../config/lib/checkMapInstance.js";
 import { getExternalScript } from "#shared/lib/utils/getExtetnalScript";
 
@@ -29,6 +30,9 @@ export class YandexMap {
     this.currentBalloon = null;
     this.classNames = classNames ?? defaultClassNames;
     this.iconShapeCfg = iconShapeCfg ?? defaultIconShapeCfg;
+    this.attrs = {
+      ballon: "data-js-ballon",
+    };
   }
 
   getBallonLayout() {
@@ -50,15 +54,16 @@ export class YandexMap {
   }
 
   getBallonContent({ id, children }) {
+    const linkToCreateSwiperFn = this.createSwiperForBallon.bind(this);
     if (window.ymaps) {
       const ballonContent = window.ymaps.templateLayoutFactory.createClass(
-        `<div class="${this.classNames.ballonContent}" data-js-ballon=${id}> 
+        `<div class="${this.classNames.ballonContent}" ${this.attrs.ballon}=${id}> 
             ${children}
         </div>`,
         {
           build: function () {
             ballonContent.superclass.build.call(this);
-            // this.createSwiper(ballonId); TODO: доделать.
+            linkToCreateSwiperFn(id);
           },
           clear: function () {
             ballonContent.superclass.clear.call(this);
@@ -70,30 +75,30 @@ export class YandexMap {
     throw new Error("ymaps not ready");
   }
 
-  createSwiper(ballonId) {
+  createSwiperForBallon(ballonId) {
     try {
       const ballonContainer = document.querySelector(
-        `[data-js-ballon=${ballonId}`
+        `[${this.attrs.ballon}="${ballonId}"]`
       );
 
-      // const swiperEl = ballonContainer.querySelector(".swiper");
-      // new Swiper(swiperEl, {
-      //   direction: "vertical",
-      //   loop: true,
 
-      //   pagination: {
-      //     el: ".swiper-pagination",
-      //   },
+      const swiperEl = ballonContainer.querySelector(".swiper");
+      new Swiper(swiperEl, {
+        slidesPerView: 1,
+        direction: "horizontal",
+        pagination: {
+          el: ".swiper-pagination",
+        },
 
-      //   navigation: {
-      //     nextEl: ".swiper-button-next",
-      //     prevEl: ".swiper-button-prev",
-      //   },
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
 
-      //   scrollbar: {
-      //     el: ".swiper-scrollbar",
-      //   },
-      // });
+        scrollbar: {
+          el: ".swiper-scrollbar",
+        },
+      });
     } catch (e) {
       console.error(e);
     }
