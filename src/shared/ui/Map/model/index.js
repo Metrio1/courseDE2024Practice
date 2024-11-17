@@ -7,6 +7,7 @@ import {
 import Swiper from "swiper";
 import { checkMapInstance } from "../config/lib/checkMapInstance.js";
 import { getExternalScript } from "#shared/lib/utils/getExtetnalScript";
+import {markDetail} from "#widgets/MapApp/api/mockData.js";
 
 export class YandexMap {
   constructor({
@@ -35,6 +36,8 @@ export class YandexMap {
     };
   }
 
+
+
   getBallonLayout() {
     if (window.ymaps) {
       const ballonLayout = window.ymaps.templateLayoutFactory.createClass(
@@ -53,22 +56,23 @@ export class YandexMap {
     throw new Error("ymaps not ready");
   }
 
-  getBallonContent({ id, children }) {
+  getBallonContent({ id }) {
     const linkToCreateSwiperFn = this.createSwiperForBallon.bind(this);
+
     if (window.ymaps) {
       const ballonContent = window.ymaps.templateLayoutFactory.createClass(
-        `<div class="${this.classNames.ballonContent}" ${this.attrs.ballon}=${id}> 
-            ${children}
-        </div>`,
-        {
-          build: function () {
-            ballonContent.superclass.build.call(this);
-            linkToCreateSwiperFn(id);
-          },
-          clear: function () {
-            ballonContent.superclass.clear.call(this);
-          },
-        }
+          `<div class="${this.classNames.ballonContent}" ${this.attrs.ballon}="${id}"> 
+          ${this.getLayoutContentForBallon(id)}
+      </div>`,
+          {
+            build: function () {
+              ballonContent.superclass.build.call(this);
+              linkToCreateSwiperFn(id);
+            },
+            clear: function () {
+              ballonContent.superclass.clear.call(this);
+            },
+          }
       );
       return ballonContent;
     }
@@ -218,19 +222,50 @@ export class YandexMap {
     document.dispatchEvent(customEvent);
   }
 
-  renderCustomBallon(id, mark, info) {
+  renderCustomBallon(id, mark) {
     mark.options.set(
-      "balloonContentLayout",
-      this.getBallonContent({
-        id,
-        children: `${info}`,
-      })
+        "balloonContentLayout",
+        this.getBallonContent({
+          id,
+        })
     );
   }
 
-  getLayoutContentForBallon(info) {
-    console.debug("Вот здесь мы начинаем формировать верстку"); //TODO: ДЗ, сделать верстку балуна и вернуть ее
-    return "<p>Что-то будет</p>";
+  getLayoutContentForBallon(id) {
+    const detail = markDetail[id];
+
+    if (!detail) {
+      return `<p>Информация не найдена</p>`;
+    }
+
+    const { title, address, comment, images } = detail;
+
+    return `
+    <div class="balloon-header">
+      <h3>${title}</h3>
+      <p>${address.city}, ${address.street}, ${address.house}</p>
+    </div>
+    <div class="balloon-body">
+      <p>${comment}</p>
+      ${
+        images && images.length
+            ? `<div class="swiper">
+              <div class="swiper-wrapper">
+                ${images
+                .map(
+                    (image) =>
+                        `<div class="swiper-slide"><img src="${image}" alt="Фото"></div>`
+                )
+                .join("")}
+              </div>
+              <div class="swiper-pagination"></div>
+              <div class="swiper-button-next"></div>
+              <div class="swiper-button-prev"></div>
+            </div>`
+            : ""
+    }
+    </div>
+  `;
   }
 
   @checkMapInstance

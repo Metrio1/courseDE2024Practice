@@ -33,5 +33,14 @@
   &__ballonContent {
     background-color: var(--yandexMapBallonContentBgColor);
     width: 100%;
+    max-width: var(--yandexMapBallonLayoutWidth);
+    overflow: hidden;
+
+    & img {
+      width: 37rem;
+      height: 19rem;
+      object-fit: cover;
+      display: block;
+    }
   }
 }
