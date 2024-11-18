@@ -8,6 +8,9 @@ import Swiper from "swiper";
 import { checkMapInstance } from "../config/lib/checkMapInstance.js";
 import { getExternalScript } from "#shared/lib/utils/getExtetnalScript";
 import {markDetail} from "#widgets/MapApp/api/mockData.js";
+import {BallonButtons} from "#shared/ui/Map/ui/BallonButtons.js";
+import {EditIcon} from "#shared/ui/Icons/ui/EditIcon.js";
+import {DeleteIcon} from "#shared/ui/Icons/ui/DeleteIcon.js";
 
 export class YandexMap {
   constructor({
@@ -240,13 +243,22 @@ export class YandexMap {
 
     const { title, address, comment, images } = detail;
 
+    const buttonsConfig = [
+      {
+        text: "Редактировать",
+        iconSlot: EditIcon(),
+        extraAttrs: [{ name: "data-action", value: "edit" }],
+      },
+      {
+        text: "",
+        iconSlot: DeleteIcon(),
+        extraAttrs: [{ name: "data-action", value: "delete" }],
+        extraClasses: ["button--no-gap"],
+      },
+    ];
+
     return `
-    <div class="balloon-header">
-      <h3>${title}</h3>
-      <p>${address.city}, ${address.street}, ${address.house}</p>
-    </div>
-    <div class="balloon-body">
-      <p>${comment}</p>
+    <div class="ballon-swiper">
       ${
         images && images.length
             ? `<div class="swiper">
@@ -259,11 +271,19 @@ export class YandexMap {
                 .join("")}
               </div>
               <div class="swiper-pagination"></div>
-              <div class="swiper-button-next"></div>
-              <div class="swiper-button-prev"></div>
             </div>`
             : ""
     }
+      <div class="ballon-body">
+        <div class="ballon-description">
+          <h3>${title}</h3>
+          <p>${address.street}, ${address.house}</p>
+          <p>${comment}</p>
+        </div>
+        <div class="ballon-footer">
+          ${BallonButtons({ buttonsConfig })}
+        </div>
+      </div>
     </div>
   `;
   }
