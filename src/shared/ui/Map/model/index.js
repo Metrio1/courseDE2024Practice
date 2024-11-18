@@ -95,7 +95,9 @@ export class YandexMap {
         direction: "horizontal",
         pagination: {
           el: ".swiper-pagination",
+          clickable: true,
         },
+        loop: true,
 
         navigation: {
           nextEl: ".swiper-button-next",
@@ -280,9 +282,7 @@ export class YandexMap {
           <p>${address.street}, ${address.house}</p>
           <p>${comment}</p>
         </div>
-        <div class="ballon-footer">
-          ${BallonButtons({ buttonsConfig })}
-        </div>
+        ${BallonButtons({ buttonsConfig })}
       </div>
     </div>
   `;

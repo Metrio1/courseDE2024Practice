@@ -9,15 +9,15 @@ import { getGeneratedAttrs } from "#shared/lib/utils/index.js";
  */
 export const BallonButtons = ({ extraClasses = [], buttonsConfig = [] } = {}) => {
     return `
-    <div class="ballon-buttons ${extraClasses.join(" ")}">
+    <div class="ballon-actions ${extraClasses.join(" ")}">
       ${buttonsConfig
         .map(
             ({ text, iconSlot, extraAttrs, extraClasses }) => `
         <button 
-          class="ballon-buttons__button ${extraClasses ? extraClasses.join(" ") : ""}" 
+          class="ballon-actions__button ${extraClasses ? extraClasses.join(" ") : ""}" 
           ${getGeneratedAttrs(extraAttrs || [])}>
-          <span class="btn__icon">${iconSlot || ""}</span>
-          <span class="ballon-buttons__text">${text || ""}</span>
+          <span class="ballon-actions__button-icon">${iconSlot || ""}</span>
+          <span class="ballon-actions__button-text">${text || ""}</span>
         </button>
       `
         )
