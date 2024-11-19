@@ -85,31 +85,47 @@ export class YandexMap {
   createSwiperForBallon(ballonId) {
     try {
       const ballonContainer = document.querySelector(
-        `[${this.attrs.ballon}="${ballonId}"]`
+          `[${this.attrs.ballon}="${ballonId}"]`
       );
-
+      if (!ballonContainer) {
+        console.error("Балун контейнер не найден");
+        return;
+      }
 
       const swiperEl = ballonContainer.querySelector(".swiper");
+      if (!swiperEl) {
+        console.error("Swiper элемент не найден");
+        return;
+      }
+
+      const paginationEl = swiperEl.querySelector(".swiper-pagination");
+      if (!paginationEl) {
+        console.error("Элемент пагинации не найден");
+        return;
+      }
+
+      console.log("Инициализация Swiper", { swiperEl, paginationEl });
+
       new Swiper(swiperEl, {
         slidesPerView: 1,
         direction: "horizontal",
         pagination: {
           el: ".swiper-pagination",
           clickable: true,
+          bulletClass: "swiper-pagination-bullet",
+          bulletActiveClass: "swiper-pagination-bullet-active",
         },
         loop: true,
-
         navigation: {
           nextEl: ".swiper-button-next",
           prevEl: ".swiper-button-prev",
         },
-
         scrollbar: {
           el: ".swiper-scrollbar",
         },
       });
     } catch (e) {
-      console.error(e);
+      console.error("Ошибка инициализации Swiper:", e);
     }
   }
 
@@ -250,42 +266,42 @@ export class YandexMap {
         text: "Редактировать",
         iconSlot: EditIcon(),
         extraAttrs: [{ name: "data-action", value: "edit" }],
-      },
+  },
       {
         text: "",
         iconSlot: DeleteIcon(),
         extraAttrs: [{ name: "data-action", value: "delete" }],
-        extraClasses: ["button--no-gap"],
-      },
+        extraClasses: ["button--no-gap", "btn--isRedIcon"],
+  },
     ];
 
     return `
-    <div class="ballon-swiper">
-      ${
+  <div class="ballon-swiper">
+    ${
         images && images.length
             ? `<div class="swiper">
-              <div class="swiper-wrapper">
-                ${images
+            <div class="swiper-wrapper">
+              ${images
                 .map(
                     (image) =>
                         `<div class="swiper-slide"><img src="${image}" alt="Фото"></div>`
                 )
                 .join("")}
-              </div>
-              <div class="swiper-pagination"></div>
-            </div>`
+            </div>
+            <div class="swiper-pagination"></div> <!-- Пагинация -->
+          </div>`
             : ""
     }
-      <div class="ballon-body">
-        <div class="ballon-description">
-          <h3>${title}</h3>
-          <p>${address.street}, ${address.house}</p>
-          <p>${comment}</p>
-        </div>
-        ${BallonButtons({ buttonsConfig })}
+    <div class="ballon-body">
+      <div class="ballon-description">
+        <h3>${title}</h3>
+        <p>${address.street}, ${address.house}</p>
+        <p>${comment}</p>
       </div>
+      ${BallonButtons({ buttonsConfig })}
     </div>
-  `;
+  </div>
+`;
   }
 
   @checkMapInstance

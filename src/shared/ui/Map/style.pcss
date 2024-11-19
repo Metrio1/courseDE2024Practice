@@ -1,7 +1,7 @@
 .yandexMap {
   --yandexMapWidthPlacemark: 4.625rem;
   --yandexMapBallonLayoutWidth: 37.5rem;
-  --yandexMapBallonLayoutMinHeight: 20rem;
+  --yandexMapBallonLayoutMinHeight: 15rem;
   --yandexMapBallonContentBgColor: var(--colorWhite);
 
   border-radius: 5rem;
@@ -49,7 +49,7 @@
 .ballon {
 
   &-body {
-    padding: 2rem 2.5rem 2.5rem 2.5rem;
+    padding: 2rem;
   }
 
   &-actions {
@@ -57,11 +57,25 @@
     justify-content: space-between;
 
     &__button {
+      @extend .btn;
+      padding: 0.5rem;
+      border-radius: 1rem;
+      color: var(--btnIconColor);
       border: none;
       background: none;
       display: flex;
       align-items: center;
       gap: 1rem;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--colorGrayLight);
+      }
+
+      &-icon {
+        height: 20px;
+      }
+
     }
   }
 }
@@ -70,8 +84,11 @@
   gap: 0;
 }
 
+
+/* eslint-disable */
 .swiper {
   border-radius: 1.5rem;
+
 
   &-pagination {
     position: absolute;
@@ -97,3 +114,4 @@
     }
   }
 }
+/* eslint-enable */
