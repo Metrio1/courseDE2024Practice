@@ -1,3 +1,5 @@
+@use "path/to/btn-file" as btn;
+
 .yandexMap {
   --yandexMapWidthPlacemark: 4.625rem;
   --yandexMapBallonLayoutWidth: 37.5rem;
@@ -57,25 +59,12 @@
     justify-content: space-between;
 
     &__button {
-      @extend .btn;
       padding: 0.5rem;
-      border-radius: 1rem;
-      color: var(--btnIconColor);
-      border: none;
-      background: none;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      cursor: pointer;
-
-      &:hover {
-        background-color: var(--colorGrayLight);
-      }
 
       &-icon {
         height: 20px;
+        color: var(--btnIconColor);
       }
-
     }
   }
 }

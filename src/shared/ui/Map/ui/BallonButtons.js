@@ -14,7 +14,7 @@ export const BallonButtons = ({ extraClasses = [], buttonsConfig = [] } = {}) =>
         .map(
             ({ text, iconSlot, extraAttrs, extraClasses }) => `
         <button 
-          class="ballon-actions__button ${extraClasses ? extraClasses.join(" ") : ""}" 
+          class="ballon-actions__button btn ${extraClasses ? extraClasses.join(" ") : ""}" 
           ${getGeneratedAttrs(extraAttrs || [])}>
           <span class="ballon-actions__button-icon">${iconSlot || ""}</span>
           <span class="ballon-actions__button-text">${text || ""}</span>
