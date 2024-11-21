@@ -30,6 +30,7 @@ const IndexPage = () => `
       <main>
       <div class="mapLayout">
         <aside class="mapLayout__filters">
+           <input type="text" id="searchAddress" />
           ${Switch({ label: "Бары", labelPosition: "right" })}
           ${Switch({ label: "Рестораны", labelPosition: "right" })}
           ${Switch({ label: "ТРК", labelPosition: "right" })}
@@ -175,8 +176,7 @@ const IndexPage = () => `
               ],
             },
           })}
-        </div>
-        
+        </div>  
       </main>
     </body>
   </html>

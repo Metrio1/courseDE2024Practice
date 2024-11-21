@@ -5,6 +5,7 @@
   --yandexMapBallonLayoutWidth: 37.5rem;
   --yandexMapBallonLayoutMinHeight: 15rem;
   --yandexMapBallonContentBgColor: var(--colorWhite);
+  --yandexMapBallonLayoutPd: 2px;
 
   border-radius: 5rem;
   overflow: hidden;
@@ -27,9 +28,10 @@
     min-height: var(--yandexMapBallonLayoutMinHeight);
     background-color: var(--colorWhite);
     translate: calc(-50% + var(--yandexMapWidthPlacemark) / 2)
-    calc(-100% - 2rem);
-    padding: 2px;
+      calc(-100% - 2rem);
+    padding: var(--yandexMapBallonLayoutPd);
     border-radius: 2rem;
+    box-shadow: var(--boxShadowDefault);
   }
 
   &__ballonContent {

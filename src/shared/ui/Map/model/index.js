@@ -1,10 +1,11 @@
+import Swiper from "swiper";
+import { Pagination } from "swiper/modules";
 import {
   iconsPresets,
   classNames as defaultClassNames,
   yandexMapCustomEventNames,
   iconShapeCfg as defaultIconShapeCfg,
 } from "../config/constants.js";
-import Swiper from "swiper";
 import { checkMapInstance } from "../config/lib/checkMapInstance.js";
 import { getExternalScript } from "#shared/lib/utils/getExtetnalScript";
 import {markDetail} from "#widgets/MapApp/api/mockData.js";
@@ -12,6 +13,9 @@ import {BallonButtons} from "#shared/ui/Map/ui/BallonButtons.js";
 import {EditIcon} from "#shared/ui/Icons/ui/EditIcon.js";
 import {DeleteIcon} from "#shared/ui/Icons/ui/DeleteIcon.js";
 
+/**
+ *
+ */
 export class YandexMap {
   constructor({
     containerSelector,
@@ -32,14 +36,13 @@ export class YandexMap {
     this.instance = null;
     this.iconsPresets = iconsPresets;
     this.currentBalloon = null;
+    this.currentMarkerIdOpen = null;
     this.classNames = classNames ?? defaultClassNames;
     this.iconShapeCfg = iconShapeCfg ?? defaultIconShapeCfg;
     this.attrs = {
       ballon: "data-js-ballon",
     };
   }
-
-
 
   getBallonLayout() {
     if (window.ymaps) {
@@ -59,23 +62,22 @@ export class YandexMap {
     throw new Error("ymaps not ready");
   }
 
-  getBallonContent({ id }) {
+  getBallonContent({ id, children }) {
     const linkToCreateSwiperFn = this.createSwiperForBallon.bind(this);
-
     if (window.ymaps) {
       const ballonContent = window.ymaps.templateLayoutFactory.createClass(
-          `<div class="${this.classNames.ballonContent}" ${this.attrs.ballon}="${id}"> 
-          ${this.getLayoutContentForBallon(id)}
-      </div>`,
-          {
-            build: function () {
-              ballonContent.superclass.build.call(this);
-              linkToCreateSwiperFn(id);
-            },
-            clear: function () {
-              ballonContent.superclass.clear.call(this);
-            },
-          }
+        `<div class="${this.classNames.ballonContent}" ${this.attrs.ballon}=${id}> 
+            ${children}
+        </div>`,
+        {
+          build: function () {
+            ballonContent.superclass.build.call(this);
+            linkToCreateSwiperFn(id);
+          },
+          clear: function () {
+            ballonContent.superclass.clear.call(this);
+          },
+        }
       );
       return ballonContent;
     }
@@ -93,39 +95,23 @@ export class YandexMap {
       }
 
       const swiperEl = ballonContainer.querySelector(".swiper");
-      if (!swiperEl) {
-        console.error("Swiper элемент не найден");
-        return;
+      const swiperPagination =
+        ballonContainer.querySelector(".swiper-pagination");
+
+      if (swiperEl && swiperPagination) {
+        new Swiper(swiperEl, {
+          slidesPerView: 1,
+          direction: "horizontal",
+          modules: [Pagination],
+          pagination: {
+            el: swiperPagination,
+            clickable: true,
+          },
+            loop: true,
+        });
       }
-
-      const paginationEl = swiperEl.querySelector(".swiper-pagination");
-      if (!paginationEl) {
-        console.error("Элемент пагинации не найден");
-        return;
-      }
-
-      console.log("Инициализация Swiper", { swiperEl, paginationEl });
-
-      new Swiper(swiperEl, {
-        slidesPerView: 1,
-        direction: "horizontal",
-        pagination: {
-          el: ".swiper-pagination",
-          clickable: true,
-          bulletClass: "swiper-pagination-bullet",
-          bulletActiveClass: "swiper-pagination-bullet-active",
-        },
-        loop: true,
-        navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        },
-        scrollbar: {
-          el: ".swiper-scrollbar",
-        },
-      });
     } catch (e) {
-      console.error("Ошибка инициализации Swiper:", e);
+      console.error(e);
     }
   }
 
@@ -221,10 +207,12 @@ export class YandexMap {
       }
       // Обновляем ссылку на текущий открытый балун
       this.currentBalloon = placemark;
+      this.currentMarkerIdOpen = id;
     });
 
     placemark.events.add("balloonclose", () => {
       this.currentBalloon = null;
+      this.currentMarkerIdOpen = null;
     });
 
     this.instance.geoObjects.add(placemark);
@@ -232,6 +220,8 @@ export class YandexMap {
 
   handleMarkerClick(id, e) {
     const targetPlacemark = e.get("target");
+
+    if (this.currentBalloon && this.currentMarkerIdOpen === id) return;
 
     const customEvent = new CustomEvent(yandexMapCustomEventNames.markClicked, {
       detail: {
@@ -243,23 +233,24 @@ export class YandexMap {
     document.dispatchEvent(customEvent);
   }
 
-  renderCustomBallon(id, mark) {
+  updateBallonContent(id, mark, info) {
     mark.options.set(
-        "balloonContentLayout",
-        this.getBallonContent({
-          id,
-        })
+      "balloonContentLayout",
+      this.getBallonContent({
+        id,
+        children: `${info}`,
+      })
     );
   }
 
-  getLayoutContentForBallon(id) {
-    const detail = markDetail[id];
-
-    if (!detail) {
-      return `<p>Информация не найдена</p>`;
-    }
-
-    const { title, address, comment, images } = detail;
+  getLayoutContentForBallon(info) {
+      const {
+          type,
+          title,
+          comment,
+          images,
+          address: { city, house, street },
+      } = info;
 
     const buttonsConfig = [
       {
@@ -295,7 +286,8 @@ export class YandexMap {
     <div class="ballon-body">
       <div class="ballon-description">
         <h3>${title}</h3>
-        <p>${address.street}, ${address.house}</p>
+        <div>${this.iconsPresets[type]}</div>
+        <p>${street}, ${house}</p>
         <p>${comment}</p>
       </div>
       ${BallonButtons({ buttonsConfig })}
