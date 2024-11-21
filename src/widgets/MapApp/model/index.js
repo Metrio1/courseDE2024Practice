@@ -4,12 +4,13 @@ import { yandexMapCustomEventNames } from "#shared/ui/Map/config/constants";
 import { YandexMap } from "#shared/ui/Map/model";
 
 export class MapApp {
-  constructor(storeService, apiClient) {
+  constructor(storeService, apiClient, filters) {
     this.apiClient = apiClient;
     this.storeService = storeService;
     this.apiGeoUrl = "https://geocode-maps.yandex.ru/1.x/?apikey";
     this.apiKey = "b4a559eb-311c-4123-8025-480ecdc62549";
-    this.inputAddress = document.querySelector("#searchAddress"); //TODO: вынести в фильтр.
+    this.filters = filters || { inputAddress: "#searchAddress" };
+    this.inputAddress = document.querySelector(this.filters.inputAddress);
     console.debug(this.inputAddress, "!!!");
 
     this.yandexMap = new YandexMap({
@@ -36,7 +37,7 @@ export class MapApp {
 
     this.#bindYandexMapEvents();
     this.subscribeForStoreService();
-    this.#bindEvents(); //TODO: bindFilterEvents
+    this.#bindFilterEvents();
   }
 
   async getMarks() {
@@ -86,31 +87,32 @@ export class MapApp {
     console.debug("markers changed", this.storeService.getFilters());
   }
 
-  handleCenterMapByAddress(address) {
+  async handleCenterMapByAddress(address) {
     console.debug(address, "address");
-    //TODO: как-то проверять что yandexMap и переписать на apiClient (добавить параметр ingoreBaseUrl)
-    // this.apiClient.get(this.apiGeoUrl, {
-    //   apikey: this.apiKey,
-    //   geocode: encodeURIComponent(address),
-    //   format: "json",
-    // });
 
-    fetch(
-      `${this.apiGeoUrl}=${this.apiKey}&geocode=${encodeURIComponent(address)}&format=json`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const coords =
-          data.response.GeoObjectCollection.featureMember[0]?.GeoObject?.Point?.pos?.split(
-            " "
+    try {
+      const response = await this.apiClient.get(this.apiGeoUrl, {
+        apikey: this.apiKey,
+        geocode: encodeURIComponent(address),
+        format: "json",
+        ignoreBaseUrl: true, // Добавляем этот параметр
+      });
+
+      const coords =
+          response?.data?.response?.GeoObjectCollection?.featureMember[0]?.GeoObject?.Point?.pos?.split(
+              " "
           );
-        if (coords) {
-          const lat = parseFloat(coords[1]);
-          const lon = parseFloat(coords[0]);
-          this.yandexMap.centerMapByCords([lat, lon]);
-        }
-      })
-      .catch((e) => console.error(e));
+
+      if (coords) {
+        const lat = parseFloat(coords[1]);
+        const lon = parseFloat(coords[0]);
+        this.yandexMap.centerMapByCords([lat, lon]);
+      } else {
+        console.warn("Не удалось получить координаты для адреса", address);
+      }
+    } catch (e) {
+      console.error("Ошибка при получении координат для адреса", e);
+    }
   }
 
   subscribeForStoreService() {
@@ -133,15 +135,16 @@ export class MapApp {
     });
   }
 
-  //TODO: переписать на фильтры
-  #bindEvents() {
+  #bindFilterEvents() {
     const debouncedHandleMapByAddress = getDebouncedFn(
-      this.handleCenterMapByAddress,
-      1000
+        this.handleCenterMapByAddress,
+        1000
     ).bind(this);
-    if (this.inputAddress)
+
+    if (this.inputAddress) {
       this.inputAddress.addEventListener("input", (e) => {
         debouncedHandleMapByAddress(e.target.value);
       });
+    }
   }
 }
