@@ -2,6 +2,7 @@
 import "choices.js/public/assets/styles/choices.css";
 import 'swiper/css/bundle';
 
+
 const files = await import.meta.webpackContext("../", {
   regExp: /\.pcss$/,
   mode: "eager",
