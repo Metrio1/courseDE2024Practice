@@ -6,6 +6,7 @@
   --yandexMapBallonLayoutMinHeight: 15rem;
   --yandexMapBallonContentBgColor: var(--colorWhite);
   --yandexMapBallonLayoutPd: 2px;
+  position: relative;
 
   border-radius: 5rem;
   overflow: hidden;
@@ -47,6 +48,16 @@
       object-fit: cover;
       display: block;
     }
+  }
+
+  &__centerMarker {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4rem;
+    height: 4rem;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
   }
 }
 

@@ -70,6 +70,7 @@ const IndexPage = () => `
             extraInputAttrs: [
               { name: "name", value: "rememberMe" },
               { name: "form", value: "formAuth" },
+              { name: "checked", value: "true" },
             ],
           })}
         </div>
