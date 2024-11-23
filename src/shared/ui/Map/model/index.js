@@ -8,10 +8,9 @@ import {
 } from "../config/constants.js";
 import { checkMapInstance } from "../config/lib/checkMapInstance.js";
 import { getExternalScript } from "#shared/lib/utils/getExtetnalScript";
-import {markDetail} from "#widgets/MapApp/api/mockData.js";
-import {BallonButtons} from "#shared/ui/Map/ui/BallonButtons.js";
 import {EditIcon} from "#shared/ui/Icons/ui/EditIcon.js";
 import {DeleteIcon} from "#shared/ui/Icons/ui/DeleteIcon.js";
+import {Ballon} from "#entities/ui/Ballon";
 
 /**
  *
@@ -268,34 +267,7 @@ export class YandexMap {
   },
     ];
 
-    return `
-  <div class="ballon-swiper">
-    ${
-        images && images.length
-            ? `<div class="swiper">
-            <div class="swiper-wrapper">
-              ${images
-                .map(
-                    (image) =>
-                        `<div class="swiper-slide"><img src="${image}" alt="Фото"></div>`
-                )
-                .join("")}
-            </div>
-            <div class="swiper-pagination"></div> <!-- Пагинация -->
-          </div>`
-            : ""
-    }
-    <div class="ballon-body">
-      <div class="ballon-description">
-        <h3>${title}</h3>
-        <div>${this.iconsPresets[type]}</div>
-        <p>${street}, ${house}</p>
-        <p>${comment}</p>
-      </div>
-      ${BallonButtons({ buttonsConfig })}
-    </div>
-  </div>
-`;
+    return Ballon(info, buttonsConfig, this.iconsPresets);
   }
 
   @checkMapInstance
