@@ -30,8 +30,8 @@ const IndexPage = () => `
       <main>
       <div class="mapLayout">
         <aside class="mapLayout__filters">
-           <input type="text" id="searchAddress" />
-           <div data-js-filter="1">
+           <input class="mapLayout__input" type="text" id="searchAddress" placeholder="Введите текст"/>
+           <div class="switch__wrapper" data-js-filter="1">
              ${Switch({ label: "Бары", labelPosition: "right" })}
           </div>
           ${Switch({ label: "Рестораны", labelPosition: "right" })}
@@ -41,7 +41,6 @@ const IndexPage = () => `
         </aside>
         <div class="mapLayout__map">
           <div id="map1" class="yandexMap" style="width: 1407px; height: 658px;"></div>
-<!--          <img src="assets/marksDetail/image1.jpg">-->
             ${MapButtons({
               buttons: [
                 { text: "Добавить метку", iconSlot: LocationIcon() },
@@ -78,56 +77,6 @@ const IndexPage = () => `
         </div>
 
         <div style="max-width: 279px">
-          ${CustomSelect({
-            extraAttrs: [{ name: "id", value: "select-type-mark" }],
-            cfg: {
-              itemSelectText: "",
-              searchEnabled: false,
-              choices: [
-                {
-                  value: "Ресторан",
-                  label: "Ресторан",
-                  selected: true,
-                  customProperties: {
-                    icon: RestIcon({ iconColor: "var(--colorRed)" }),
-                  },
-                },
-                {
-                  value: "Ночной клуб",
-                  label: "Ночной клуб",
-                  selected: false,
-                  customProperties: {
-                    icon: MusicIcon({ iconColor: "var(--colorRed)" }),
-                  },
-                },
-                {
-                  value: "Театр",
-                  label: "Театр",
-                  selected: false,
-                  customProperties: {
-                    icon: TheatreIcon({ iconColor: "var(--colorRed)" }),
-                  },
-                },
-                {
-                  value: "Кино",
-                  label: "Кино",
-                  selected: false,
-                  customProperties: {
-                    icon: CinemaIcon({ iconColor: "var(--colorPrimary)" }),
-                  },
-                },
-                {
-                  value: "Бар",
-                  label: "Бар",
-                  selected: false,
-                  customProperties: {
-                    icon: BarIcon({ iconColor: "var(--colorRed)" }),
-                  },
-                },
-              ],
-            },
-          })}
-
           ${CustomSelect({
             extraAttrs: [{ name: "id", value: "select-type-mark" }],
             cfg: {
