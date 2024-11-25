@@ -4,7 +4,6 @@ import Choices from "choices.js";
  * Модель для создания кастомного селекта на основе choices.js
  */
 export class ChoiceSelectModel {
-
     selectors = {
         instance: "[data-js-custom-select]",
     };
@@ -63,12 +62,35 @@ export class ChoiceSelectModel {
         );
     }
 
+    static addHighlightEffect() {
+        const applyHighlight = () => {
+            const items = document.querySelectorAll('.choices__item');
+
+            items.forEach((item) => {
+                item.addEventListener('mouseenter', () => {
+                    item.classList.add('is-highlighted');
+                });
+
+                item.addEventListener('mouseleave', () => {
+                    item.classList.remove('is-highlighted');
+                });
+            });
+        };
+
+        ChoiceSelectModel.choicesInstances.forEach((instance) => {
+            instance.passedElement.element.addEventListener('showDropdown', applyHighlight);
+        });
+
+        applyHighlight();
+    }
+
     constructor() {
         if (ChoiceSelectModel.instance) return ChoiceSelectModel.instance;
         this.selects = document.querySelectorAll(this.selectors.instance);
         this.selects.forEach((select) => {
             ChoiceSelectModel.createChoiceSelect(select);
         });
+        ChoiceSelectModel.addHighlightEffect();
         ChoiceSelectModel.instance = this;
     }
 }
