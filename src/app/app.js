@@ -1,7 +1,7 @@
 import "./styles.js";
 import { API_URL, API_ENDPOINTS } from "#shared/config/constants";
 import { ApiClient } from "#shared/lib/services/ApiClient.js";
-import { ChoiceSelectModel } from "#shared/ui/CustomSelect/model/index.js";
+import { CustomSelect } from "#shared/ui/CustomSelect/model/index.js";
 import { MapApp } from "#widgets/MapApp/model/index.js";
 import {StoreService} from "#shared/lib/services/StoreService";
 import {createStore} from "#shared/store/store";
@@ -37,8 +37,8 @@ Promise.all([initMSW(), domReady()]).then(() => {
 
   new MapApp(storeService, apiClient);
 
-  new ChoiceSelectModel();
-  window.App.ChoiceSelectModel = ChoiceSelectModel;
+  new CustomSelect();
+  window.App.ChoiceSelectModel = CustomSelect;
 
   apiClient.get(API_ENDPOINTS.marks.list).then((res) => console.debug(res));
 });

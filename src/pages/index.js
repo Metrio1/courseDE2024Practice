@@ -81,7 +81,6 @@ const IndexPage = () => `
           ${CustomSelect({
             extraAttrs: [{ name: "id", value: "select-type-mark" }],
             cfg: {
-              preset: "default",
               itemSelectText: "",
               searchEnabled: false,
               choices: [
@@ -132,7 +131,6 @@ const IndexPage = () => `
           ${CustomSelect({
             extraAttrs: [{ name: "id", value: "select-type-mark" }],
             cfg: {
-              preset: "fancy",
               itemSelectText: "",
               searchEnabled: false,
               choices: [

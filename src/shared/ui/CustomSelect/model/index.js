@@ -1,18 +1,14 @@
 import Choices from "choices.js";
 
 /**
- * Модель для создания кастомного селекта на основе choices.js
+ * Класс для управления кастомными селектами на базе Choices.js.
  */
-export class ChoiceSelectModel {
-    selectors = {
-        instance: "[data-js-custom-select]",
-    };
-
-    static instance;
+export class CustomSelect {
+    static instance = null;
 
     static choicesInstances = [];
 
-    static defaultCfg = {
+    static defaultConfig = {
         classNames: {
             containerOuter: ["choices", "customSelect"],
             itemChoice: ["choices__item--choice", "customSelect__choice"],
@@ -33,7 +29,7 @@ export class ChoiceSelectModel {
                 choice: (classNames, data) => {
                     const icon = data.customProperties?.icon || '';
                     return template(`
-                    <div class="choices__item choices__item--choice customSelect__choice choices__item--selectable customSelect__item--selectable" data-select-text="${this.config.itemSelectText}" data-choice data-id="${data.id}" data-value="${data.value}" ${
+                    <div class="choices__item customSelect__choice choices__item--selectable" data-select-text="${this.config.itemSelectText}" data-choice data-id="${data.id}" data-value="${data.value}" ${
                         data.groupId > 0 ? 'role="treeitem"' : 'role="option"'
                     }>
                         ${icon}<span class="customSelect__label">${data.label}</span>
@@ -44,53 +40,69 @@ export class ChoiceSelectModel {
         },
     };
 
-    static createChoiceSelect(node) {
-        const cfg = node.dataset.jsCustomSelect ? JSON.parse(node.dataset.jsCustomSelect) : {};
-        const choicesConfig = {
-            ...ChoiceSelectModel.defaultCfg,
-            ...cfg,
-        };
+    constructor(selectors = { instance: "[data-js-custom-select]" }) {
+        if (CustomSelect.instance) return CustomSelect.instance;
 
-        ChoiceSelectModel.choicesInstances.push(
-            new Choices(node, choicesConfig)
-        );
+        this.selectors = selectors;
+        this.selectElements = document.querySelectorAll(this.selectors.instance);
+
+        this.initSelects();
+        this.addGlobalEvents();
+
+        CustomSelect.instance = this;
     }
 
-    static getChoiceInstance(node) {
-        return ChoiceSelectModel.choicesInstances.find(
-            (instance) => instance.passedElement.element === node
-        );
-    }
-
-    static addHighlightEffect() {
-        const applyHighlight = () => {
-            const items = document.querySelectorAll('.choices__item');
-
-            items.forEach((item) => {
-                item.addEventListener('mouseenter', () => {
-                    item.classList.add('is-highlighted');
-                });
-
-                item.addEventListener('mouseleave', () => {
-                    item.classList.remove('is-highlighted');
-                });
-            });
-        };
-
-        ChoiceSelectModel.choicesInstances.forEach((instance) => {
-            instance.passedElement.element.addEventListener('showDropdown', applyHighlight);
+    initSelects() {
+        this.selectElements.forEach((select) => {
+            CustomSelect.createInstance(select);
         });
-
-        applyHighlight();
     }
 
-    constructor() {
-        if (ChoiceSelectModel.instance) return ChoiceSelectModel.instance;
-        this.selects = document.querySelectorAll(this.selectors.instance);
-        this.selects.forEach((select) => {
-            ChoiceSelectModel.createChoiceSelect(select);
+    static createInstance(node) {
+        const userConfig = node.dataset.jsCustomSelect ? JSON.parse(node.dataset.jsCustomSelect) : {};
+        const config = {
+            ...CustomSelect.defaultConfig,
+            ...userConfig,
+        };
+        const instance = new Choices(node, config);
+
+        CustomSelect.choicesInstances.push(instance);
+    }
+
+    static getInstanceByNode(node) {
+        return CustomSelect.choicesInstances.find((instance) => instance.passedElement.element === node);
+    }
+
+    addGlobalEvents() {
+        document.addEventListener("mouseenter", this.onMouseEnterHighlight.bind(this), true);
+        document.addEventListener("mouseleave", this.onMouseLeaveHighlight.bind(this), true);
+    }
+
+    onMouseEnterHighlight(event) {
+        const target = event.target;
+        if (target && typeof target.closest === "function") {
+            const item = target.closest(".choices__item");
+            if (item) item.classList.add("is-highlighted");
+        }
+    }
+
+    onMouseLeaveHighlight(event) {
+        const target = event.target;
+        if (target && typeof target.closest === "function") {
+            const item = target.closest(".choices__item");
+            if (item) item.classList.remove("is-highlighted");
+        }
+    }
+
+    static refreshAll() {
+        CustomSelect.choicesInstances.forEach((instance) => {
+            instance.destroy();
+            CustomSelect.createInstance(instance.passedElement.element);
         });
-        ChoiceSelectModel.addHighlightEffect();
-        ChoiceSelectModel.instance = this;
+    }
+
+    static destroyAll() {
+        CustomSelect.choicesInstances.forEach((instance) => instance.destroy());
+        CustomSelect.choicesInstances = [];
     }
 }
