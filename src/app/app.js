@@ -5,6 +5,7 @@ import { CustomSelect } from "#shared/ui/CustomSelect/model/index.js";
 import { MapApp } from "#widgets/MapApp/model/index.js";
 import {StoreService} from "#shared/lib/services/StoreService";
 import {createStore} from "#shared/store/store";
+import {modalManager} from "#shared/lib/plugins/modalManager.js";
 
 async function initMSW() {
   if (process.env.NODE_ENV === "development") {
@@ -39,6 +40,10 @@ Promise.all([initMSW(), domReady()]).then(() => {
 
   new CustomSelect();
   window.App.ChoiceSelectModel = CustomSelect;
+
+  setTimeout(() => {
+    new modalManager().open({ htmlContent: "<div>Контент модалки</div>" })
+  }, 3000)
 
   apiClient.get(API_ENDPOINTS.marks.list).then((res) => console.debug(res));
 });
