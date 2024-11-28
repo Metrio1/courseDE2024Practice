@@ -1,3 +1,4 @@
+import { PlaceSwitchGroup } from "#features/PlaceSwitchGroup";
 import { Button } from "#shared/ui/Button/index";
 import { CustomSelect } from "#shared/ui/CustomSelect/index";
 import {
@@ -127,6 +128,8 @@ const IndexPage = () => `
             },
           })}
         </div>  
+        </div>
+        ${PlaceSwitchGroup()}
       </main>
     </body>
   </html>

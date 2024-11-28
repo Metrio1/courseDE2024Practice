@@ -215,7 +215,6 @@ export class YandexMap {
       centerMarker.innerHTML = this.iconsPresets["centerMarker"];
       this.containerMap.appendChild(centerMarker);
       this.centerMarker = centerMarker;
-      console.debug(this.centerMarker);
     } catch (e) {
       console.error("Ошибка при добавлении центральной метки:", e);
     }
@@ -272,6 +271,7 @@ export class YandexMap {
 
   @checkMapInstance
   renderMarks(marks) {
+    this.clearMap(); //очистка перед рендером
     marks.forEach((mark) => {
       this.addMark({
         id: mark.id,
@@ -282,6 +282,11 @@ export class YandexMap {
         },
       });
     });
+  }
+
+  @checkMapInstance
+  clearMap() {
+    this.instance.geoObjects.removeAll();
   }
 
   @checkMapInstance
