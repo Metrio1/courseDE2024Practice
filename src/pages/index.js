@@ -30,15 +30,8 @@ const IndexPage = () => `
       </header>
       <main>
       <div class="mapLayout">
-        <aside class="mapLayout__filters">
-           <input class="mapLayout__input" type="text" id="searchAddress" placeholder="Введите текст"/>
-           <div class="switch__wrapper" data-js-filter="1">
-             ${Switch({ label: "Бары", labelPosition: "right" })}
-          </div>
-          ${Switch({ label: "Рестораны", labelPosition: "right" })}
-          ${Switch({ label: "ТРК", labelPosition: "right" })}
-          ${Switch({ label: "Театры", labelPosition: "right" })}
-          ${Switch({ label: "Кино", labelPosition: "right" })}
+        <aside>
+            ${PlaceSwitchGroup()}
         </aside>
         <div class="mapLayout__map">
           <div id="map1" class="yandexMap" style="width: 1407px; height: 658px;"></div>
@@ -129,7 +122,6 @@ const IndexPage = () => `
           })}
         </div>  
         </div>
-        ${PlaceSwitchGroup()}
       </main>
       <div id="modalSuccess">
           <p>Успешно!</p>

@@ -33,13 +33,15 @@ export const PlaceSwitchGroup = ({
     `;
       }
     )
-    .join(""); // Собираем все элементы в одну строку
+    .join("");
 
   return `
     <div class="placeSwitchGroup ${extraClasses.join(" ")}" ${getGeneratedAttrs(extraAttrs)}>
-      <div data-js-filter="marks">
-        <input type="text" name="search" data-js-filter-item="search" data-js-filter-parent-name="marks"/>
-        ${switchElements}
+      <div class="mapControls" data-js-filter="marks">
+        <input class="mapControls__searchInput" type="text" name="search" data-js-filter-item="search" data-js-filter-parent-name="marks" placeholder="Введите текст"/>
+        <div class="mapControls__filters">
+            ${switchElements}
+        </div>
       </div>
     </div>
   `;

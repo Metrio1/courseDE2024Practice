@@ -42,9 +42,9 @@ Promise.all([initMSW(), domReady()]).then(() => {
   new CustomSelect();
   window.App.ChoiceSelectModel = CustomSelect;
 
-  setTimeout(() => {
-    new ModalManager().open({ htmlContent: "<div>Контент модалки</div>" })
-  }, 3000)
+  // setTimeout(() => {
+  //   new ModalManager().open({ htmlContent: "<div>Контент модалки</div>" })
+  // }, 3000)
 
     new DeleteMarkModel();
 
