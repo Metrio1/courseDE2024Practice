@@ -131,6 +131,12 @@ const IndexPage = () => `
         </div>
         ${PlaceSwitchGroup()}
       </main>
+      <div id="modalSuccess">
+          <p>Успешно!</p>
+      </div>
+      <div id="modalError">
+          <p>Не успешно!</p>
+      </div>
     </body>
   </html>
 `;

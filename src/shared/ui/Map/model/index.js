@@ -11,6 +11,7 @@ import { getExternalScript } from "#shared/lib/utils/getExtetnalScript";
 import {EditIcon} from "#shared/ui/Icons/ui/EditIcon.js";
 import {DeleteIcon} from "#shared/ui/Icons/ui/DeleteIcon.js";
 import {Ballon} from "#entities/ui/Ballon";
+import { DeleteMarkBtn } from "#features/Marks/DeleteMark/index.js";
 
 /**
  *
@@ -243,14 +244,20 @@ export class YandexMap {
     );
   }
 
-  getLayoutContentForBallon(info) {
-      const {
-          type,
-          title,
-          comment,
-          images,
-          address: { city, house, street },
-      } = info;
+  getLayoutContentForBallon(id, info) {
+    const {
+      type,
+      title,
+        comment,
+        images,
+      address: { city, house, street },
+    } = info;
+    const slides = info.images
+      .map(
+        (image, index) =>
+          `<div class="swiper-slide"><img src="${image}" alt="${info.title} - Slide ${index + 1}"></div>`
+      )
+      .join("");
 
     const buttonsConfig = [
       {
@@ -266,7 +273,8 @@ export class YandexMap {
   },
     ];
 
-    return Ballon(info, buttonsConfig, this.iconsPresets);
+      // TODO: в качестве слотов будут передавать две фичи - удалить / редактировать
+      return Ballon(info, buttonsConfig, this.iconsPresets);
   }
 
   @checkMapInstance

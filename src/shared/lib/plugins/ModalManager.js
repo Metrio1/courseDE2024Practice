@@ -1,6 +1,6 @@
 import { Fancybox } from "@fancyapps/ui";
 
-export class modalManager {
+export class ModalManager {
     static instance;
 
     constructor(selectors = { instance: "[data-js-modal]" }) {
@@ -8,7 +8,7 @@ export class modalManager {
         this.selectElements = document.querySelectorAll(this.selectors.instance);
         this.instances = {};
 
-        return modalManager.instance || (modalManager.instance = this);
+        return ModalManager.instance || (ModalManager.instance = this);
     }
 
     open({ selector, htmlContent }) {
@@ -19,8 +19,8 @@ export class modalManager {
                 return;
             }
 
-            if (!modalManager.instance.instances[selector]) {
-                modalManager.instance.instances[selector] = Fancybox.show([{ src: element, type: "inline" }]);
+            if (!ModalManager.instance.instances[selector]) {
+                ModalManager.instance.instances[selector] = Fancybox.show([{ src: element, type: "inline" }]);
             } else {
                 console.warn(`Fancybox instance для селектора "${selector}" уже существует.`);
             }
@@ -30,7 +30,7 @@ export class modalManager {
             document.body.appendChild(container);
 
             const uniqueId = `dynamic-${Date.now()}`;
-            modalManager.instance.instances[uniqueId] = Fancybox.show([{ src: container, type: "html" }]);
+            ModalManager.instance.instances[uniqueId] = Fancybox.show([{ src: container, type: "html" }]);
 
             Fancybox.bind(`[data-fancybox="${uniqueId}"]`, {
                 on: {

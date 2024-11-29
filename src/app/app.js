@@ -1,11 +1,12 @@
 import "./styles.js";
-import { API_URL, API_ENDPOINTS } from "#shared/config/constants";
+import { API_URL } from "#shared/config/constants";
+import { ModalManager } from "#shared/lib/plugins/ModalManager.js";
 import { ApiClient } from "#shared/lib/services/ApiClient.js";
 import { CustomSelect } from "#shared/ui/CustomSelect/model/index.js";
 import { MapApp } from "#widgets/MapApp/model/index.js";
 import {StoreService} from "#shared/lib/services/StoreService";
 import {createStore} from "#shared/store/store";
-import {modalManager} from "#shared/lib/plugins/modalManager.js";
+import { DeleteMarkModel } from "#features/Marks/DeleteMark/model/index.js";
 
 async function initMSW() {
   if (process.env.NODE_ENV === "development") {
@@ -42,8 +43,9 @@ Promise.all([initMSW(), domReady()]).then(() => {
   window.App.ChoiceSelectModel = CustomSelect;
 
   setTimeout(() => {
-    new modalManager().open({ htmlContent: "<div>Контент модалки</div>" })
+    new ModalManager().open({ htmlContent: "<div>Контент модалки</div>" })
   }, 3000)
 
-  apiClient.get(API_ENDPOINTS.marks.list).then((res) => console.debug(res));
+    new DeleteMarkModel();
+
 });
