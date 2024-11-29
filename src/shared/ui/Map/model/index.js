@@ -8,10 +8,9 @@ import {
 } from "../config/constants.js";
 import { checkMapInstance } from "../config/lib/checkMapInstance.js";
 import { getExternalScript } from "#shared/lib/utils/getExtetnalScript";
-import {EditIcon} from "#shared/ui/Icons/ui/EditIcon.js";
-import {DeleteIcon} from "#shared/ui/Icons/ui/DeleteIcon.js";
 import {Ballon} from "#entities/ui/Ballon";
 import { DeleteMarkBtn } from "#features/Marks/DeleteMark/index.js";
+import {EditMarkBtn} from "#features/Marks/EditMark/ui/EditMarkBtn.js";
 
 /**
  *
@@ -259,22 +258,10 @@ export class YandexMap {
       )
       .join("");
 
-    const buttonsConfig = [
-      {
-        text: "Редактировать",
-        iconSlot: EditIcon(),
-        extraAttrs: [{ name: "data-action", value: "edit" }],
-  },
-      {
-        text: "",
-        iconSlot: DeleteIcon(),
-        extraAttrs: [{ name: "data-action", value: "delete" }],
-        extraClasses: ["button--no-gap", "btn--isRedIcon"],
-  },
-    ];
+    const editButton = EditMarkBtn({ markId: id });
+    const deleteButton = DeleteMarkBtn({ markId: id });
 
-      // TODO: в качестве слотов будут передавать две фичи - удалить / редактировать
-      return Ballon(info, buttonsConfig, this.iconsPresets);
+    return Ballon(info, [editButton, deleteButton]);
   }
 
   @checkMapInstance

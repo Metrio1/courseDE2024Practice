@@ -1,4 +1,5 @@
 import { BallonButtons } from "#shared/ui/Map/ui/BallonButtons.js";
+import {iconsPresets} from "#shared/ui/Map/config/constants.js";
 
 /**
  * Создаёт HTML для балуна.
@@ -11,11 +12,9 @@ import { BallonButtons } from "#shared/ui/Map/ui/BallonButtons.js";
  * @param {string} info.address.city - Город.
  * @param {string} info.address.street - Улица.
  * @param {string} info.address.house - Номер дома.
- * @param {Array<Object>} buttonsConfig - Конфигурация кнопок.
- * @param {Object} iconsPresets - Пресеты иконок.
  * @returns {string} HTML-строка.
  */
-export const Ballon = (info, buttonsConfig, iconsPresets) => {
+export const Ballon = (info, buttons = []) => {
     const {
         type,
         title,
@@ -37,7 +36,7 @@ export const Ballon = (info, buttonsConfig, iconsPresets) => {
                 )
                 .join("")}
             </div>
-            <div class="swiper-pagination"></div> <!-- Пагинация -->
+            <div class="swiper-pagination"></div>
           </div>`
             : ""
     }
@@ -47,8 +46,10 @@ export const Ballon = (info, buttonsConfig, iconsPresets) => {
         <div>${iconsPresets[type]}</div>
         <p>${street}, ${house}</p>
         <p>${comment}</p>
+        <div class="ballon-buttons">
+          ${buttons.join("")}
+        </div>
       </div>
-      ${BallonButtons({ buttonsConfig })}
     </div>
   </div>
 `;
