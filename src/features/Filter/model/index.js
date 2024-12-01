@@ -84,11 +84,16 @@ export class FilterManager {
       return;
     }
 
-
     const updatedFilter = {
       [filterName]: {
-        value: target.type === "checkbox" || target.type === "radio" ? null : target.value,
-        isChecked: target.type === "checkbox" || target.type === "radio" ? target.checked : false,
+        value:
+            target.type === "checkbox" || target.type === "radio"
+                ? null
+                : target.value,
+        isChecked:
+            target.type === "checkbox" || target.type === "radio"
+                ? target.checked
+                : false,
         isDisabled: target.disabled || false,
       },
     };

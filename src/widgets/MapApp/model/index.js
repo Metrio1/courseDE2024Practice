@@ -55,6 +55,12 @@ export class MapApp {
 
     console.log("Merged filters:", newFilters);
 
+    // Проверяем, есть ли в изменённом фильтре поле для адреса (например, `search`)
+    if (updatedFilters?.search?.value) {
+      const address = updatedFilters.search.value;
+      this.handleCenterMapByAddress(address); // Центрируем карту на введённом адресе
+    }
+
     // Сохраняем обновлённое состояние в store
     this.storeService.updateStore("setFilters", newFilters);
 
