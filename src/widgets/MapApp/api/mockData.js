@@ -7,17 +7,17 @@ export const filerCfg = {
     },
     bars: {
       value: null,
-      isChecked: false,
+      isChecked: true, // Активен по умолчанию
       isDisabled: false,
     },
     restaurant: {
       value: null,
-      isChecked: false,
+      isChecked: true,
       isDisabled: false,
     },
     trk: {
       value: null,
-      isChecked: false,
+      isChecked: true,
       isDisabled: false,
     },
     theatre: {
@@ -27,7 +27,7 @@ export const filerCfg = {
     },
     cinema: {
       value: null,
-      isChecked: false,
+      isChecked: true,
       isDisabled: false,
     },
   },

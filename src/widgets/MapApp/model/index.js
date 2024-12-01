@@ -1,148 +1,134 @@
-import { FilterManager } from "#features/Filter/model/index";
-import { API_ENDPOINTS } from "#shared/config/constants";
-import { yandexMapCustomEventNames } from "#shared/ui/Map/config/constants";
-import { YandexMap } from "#shared/ui/Map/model";
+import {FilterManager} from "#features/Filter/model/index";
+import {API_ENDPOINTS} from "#shared/config/constants";
+import {yandexMapCustomEventNames} from "#shared/ui/Map/config/constants";
+import {YandexMap} from "#shared/ui/Map/model";
 
-/**
- *
- */
 export class MapApp {
   constructor(storeService, apiClient) {
-    this.apiClient = apiClient;
     this.storeService = storeService;
-    this.apiGeoUrl = "https://geocode-maps.yandex.ru/1.x/?apikey";
-    this.apiKey = "b4a559eb-311c-4123-8025-480ecdc62549";
+    this.apiClient = apiClient;
 
+    // Создаем экземпляр FilterManager с обновленной логикой
+    this.filterManager = new FilterManager({
+      filterGroupName: "marks",
+      onFilterChange: this.updateMapFilters.bind(this),
+      filtersConfig: this.storeService.getFilters(),
+    });
+
+    // Инициализация карты
     this.yandexMap = new YandexMap({
       containerSelector: "#map1",
       apiUrl: "https://api-maps.yandex.ru/2.1/?apikey",
-      apiKey: this.apiKey,
+      apiKey: "b4a559eb-311c-4123-8025-480ecdc62549",
       lang: "ru_RU",
       center: [53.5, 53.9],
       zoom: 10,
     });
 
-    this.filterManager = new FilterManager({
-      filterName: `marks`,
-      onUpdate: (changedData) => this.handleFilterChanged(changedData),
-    });
-
-    this.filterManager.applyFilters(this.storeService.getFilters()); //Применяем фильтры из стора
-    this.loadAndUpdateFilters();
-    this.yandexMap
-      .initMap()
-      .then(async () => {
-        this.yandexMap.renderMarks(this.getFilteredMarkers()); //Рендерим метки из стора по фильтрам
-        const marks = await this.getMarks();
-        this.storeService.updateStore("setMarkers", marks);
-      })
-      .catch((e) => console.error(e));
-
-    this.storeService = storeService;
-    this.apiClient = apiClient;
-    this.fetchAndSetMarkers();
-
+    this.initMap();
     this.#bindYandexMapEvents();
     this.subscribeForStoreService();
   }
 
-  //Обработчик изменения фильтров
-  handleFilterChanged(changeData) {
-    //TODO: есть замечение, касательно того, что мы всегда подвязываемся к полю inputs, а если у нас будет несколько фильтров? Нужно будет подумать над этим.
-    //Тут же необходимо делать проверку если менялось поле ввода адреса и центрировать карту
-    if (changeData.search) {
-      this.handleCenterMapByAddress(changeData.search.value);
-    }
-    const currentState = this.storeService.getFilters().inputs;
-    const updatedState = { ...currentState, ...changeData };
-    this.storeService.updateStore("setFilters", { inputs: updatedState });
-  }
-
-  loadAndUpdateFilters() {
-    (async () => {
-      try {
-        const filters = await this.getFiltersCfg();
-        this.storeService.updateStore("setFilters", filters);
-        this.filterManager.applyFilters(filters);
-      } catch (error) {
-        console.error("Ошибка при получении конфигурации фильтров:", error);
-      }
-    })();
-  }
-
-  async getMarks() {
-    return this.apiClient
-      .get(API_ENDPOINTS.marks.list)
-      .then((res) => res?.data?.marks);
-  }
-
-  async getFiltersCfg() {
-    return this.apiClient
-      .get(API_ENDPOINTS.config.list)
-      .then((res) => res?.data);
-  }
-
-  async handleMarkerClick(e) {
-    const {
-      detail: { id, mark },
-    } = e;
-
+  // Метод инициализации карты
+  async initMap() {
     try {
-      const res = await this.apiClient.get(API_ENDPOINTS.marks.detail, {
-        id: id,
-      });
-      const layout = this.yandexMap.getLayoutContentForBallon(id, res.data);
-      this.yandexMap.updateBallonContent(id, mark, layout);
-    } catch (e) {
-      console.error(e);
+      await this.yandexMap.initMap();
+      this.updateMapFilters(); // Применяем фильтры при инициализации
+      const markers = await this.getMarks();
+      this.storeService.updateStore("setMarkers", markers);
+      this.yandexMap.renderMarks(this.getFilteredMarkers());
+    } catch (error) {
+      console.error("Ошибка инициализации карты", error);
     }
   }
 
-    async fetchAndSetMarkers() {
+  // Обновление меток на основе фильтров
+  updateMapFilters(updatedFilters) {
+    const currentFilters = this.storeService.getFilters();
+
+    // Объединяем текущие фильтры с обновлёнными
+    const newFilters = {
+      ...currentFilters,
+      ...updatedFilters,
+    };
+
+    console.log("Merged filters:", newFilters);
+
+    // Сохраняем обновлённое состояние в store
+    this.storeService.updateStore("setFilters", newFilters);
+
+    const filteredMarkers = this.getFilteredMarkers();
+    this.yandexMap.renderMarks(filteredMarkers);
+  }
+
+  // Загрузка и применение конфигурации фильтров
+  async loadAndUpdateFilters() {
+    try {
+      const filters = await this.getFiltersCfg();
+      this.storeService.updateStore("setFilters", filters);
+      this.filterManager.applyFilters(filters);
+    } catch (error) {
+      console.error("Ошибка при получении конфигурации фильтров:", error);
+    }
+  }
+
+  // Получение меток с сервера
+  async getMarks() {
     try {
       const response = await this.apiClient.get(API_ENDPOINTS.marks.list);
-
-      if (response.isSuccess && response.data?.marks) {
-        this.storeService.updateStore("addMarkersList", response.data.marks);
-      } else {
-        console.warn("Не удалось получить метки", response);
-      }
+      return response?.data?.marks || [];
     } catch (error) {
-      console.error("Ошибка при получении меток", error);
+      console.error("Ошибка при получении меток:", error);
+      return [];
     }
   }
 
+  // Получение конфигурации фильтров
+  async getFiltersCfg() {
+    try {
+      const response = await this.apiClient.get(API_ENDPOINTS.config.list);
+      return response?.data || {};
+    } catch (error) {
+      console.error("Ошибка при получении конфигурации фильтров:", error);
+      return {};
+    }
+  }
+
+  // Фильтрация меток
   getFilteredMarkers() {
-    // Получаем активные фильтры из состояния хранилища
-    const activeFilters = this.storeService.getFilters().inputs;
+    const filters = this.storeService.getFilters();
 
-    // Фильтруем метки, оставляем только те, для которых фильтры включены (isChecked: true)
-    const filteredMarkers = this.storeService.getMarkers().filter((marker) => {
-      // Проверяем, включен ли фильтр для типа метки
-      return activeFilters[marker.type]?.isChecked;
+    if (!filters || typeof filters !== "object") {
+      console.error("Filters not found or malformed:", filters);
+      return this.storeService.getMarkers();
+    }
+
+    const markers = this.storeService.getMarkers();
+
+    if (!markers || !Array.isArray(markers)) {
+      console.error("Markers not found or invalid format:", markers);
+      return [];
+    }
+
+    return markers.filter((marker) => {
+      const filter = filters[marker.type];
+      return filter?.isChecked;
     });
-
-    return filteredMarkers;
   }
 
-  handleMarkersChangedInStore() {
-    console.debug("markers changed", this.storeService.getMarkers());
-    // this.yandexMap.renderMarks(this.storeService.getMarkers());
-  }
-
-  handleFiltersChangedInStore() {
-    this.yandexMap.renderMarks(this.getFilteredMarkers());
-  }
-
-  handleCenterMapByAddress(address) {
-    fetch(
-      `${this.apiGeoUrl}=${this.apiKey}&geocode=${encodeURIComponent(address)}&format=json`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const coords =
+  // Центрирование карты по адресу
+  async handleCenterMapByAddress(address) {
+    try {
+      const response = await fetch(
+          `https://geocode-maps.yandex.ru/1.x/?apikey=b4a559eb-311c-4123-8025-480ecdc62549&geocode=${encodeURIComponent(
+              address
+          )}&format=json`
+      );
+      const data = await response.json();
+      const coords =
           data.response.GeoObjectCollection.featureMember[0]?.GeoObject?.Point?.pos?.split(
-            " "
+              " "
           );
 
       if (coords) {
@@ -150,37 +136,63 @@ export class MapApp {
         const lon = parseFloat(coords[0]);
         this.yandexMap.centerMapByCords([lat, lon]);
       } else {
-        console.warn("Не удалось получить координаты для адреса", address);
+        console.warn("Не удалось получить координаты для адреса:", address);
       }
-      })
-        .catch((e) => {
-          console.error("Ошибка при получении координат для адреса", e);
-        });
-    } catch (e) {
-      console.error("Ошибка до начала запроса", e);
+    } catch (error) {
+      console.error("Ошибка при обработке адреса:", error);
     }
-
-
-  subscribeForStoreService() {
-    this.markerSubscription = this.storeService.subscribeToMarkers(() => {
-      this.handleMarkersChangedInStore();
-    });
-    this.filterSubscription = this.storeService.subscribeToFilters(() => {
-      this.handleFiltersChangedInStore();
-    });
   }
 
+  // Подписка на изменения в StoreService
+  subscribeForStoreService() {
+    this.markerSubscription = this.storeService.subscribeToMarkers(() =>
+        this.handleMarkersChangedInStore()
+    );
+    this.filterSubscription = this.storeService.subscribeToFilters(() =>
+        this.handleFiltersChangedInStore()
+    );
+  }
+
+  // Отписка от изменений StoreService
   unsubscribeFromStoreService() {
     this.markerSubscription?.();
-    this.subscribeOnStoreChange?.();
+    this.filterSubscription?.();
   }
 
+  // События Yandex карты
   #bindYandexMapEvents() {
     this.yandexMap?.containerMap?.addEventListener(
-      yandexMapCustomEventNames.markClicked,
-      (e) => {
-        this.handleMarkerClick(e);
-      }
+        yandexMapCustomEventNames.markClicked,
+        (e) => this.handleMarkerClick(e)
     );
+  }
+
+  // Обработчик кликов по меткам
+  async handleMarkerClick(event) {
+    const { id, mark } = event.detail;
+    try {
+      const response = await this.apiClient.get(API_ENDPOINTS.marks.detail, {
+        id,
+      });
+      const layout = this.yandexMap.getLayoutContentForBallon(
+          id,
+          response.data
+      );
+      this.yandexMap.updateBallonContent(id, mark, layout);
+    } catch (error) {
+      console.error("Ошибка при обработке клика по метке:", error);
+    }
+  }
+
+  // Обработка изменений меток в Store
+  handleMarkersChangedInStore() {
+    const markers = this.getFilteredMarkers();
+    this.yandexMap.renderMarks(markers);
+  }
+
+  // Обработка изменений фильтров в Store
+  handleFiltersChangedInStore() {
+    const markers = this.getFilteredMarkers();
+    this.yandexMap.renderMarks(markers);
   }
 }

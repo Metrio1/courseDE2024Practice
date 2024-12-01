@@ -1,109 +1,108 @@
 import { getDebouncedFn } from "#shared/lib/utils";
 
-/**
- *
- */
 export class FilterManager {
   constructor({
-    filterName,
-    onUpdate,
-    filterCfg,
-    debounceDelayForInput = 1000,
-  }) {
-    this.attrs = {
-      filterContainer: "data-js-filter",
+                filterGroupName,
+                onFilterChange,
+                filtersConfig = {},
+                debounceDelay = 300,
+                customAttributes = {},
+              }) {
+    this.customAttributes = {
+      container: "data-js-filter",
       filterItem: "data-js-filter-item",
-      filterParentName: "data-js-filter-parent-name", //Храним имя родителя к которому относится элемент фильтра
+      parentName: "data-js-filter-parent-name",
+      ...customAttributes,
     };
-    this.filterName = filterName;
-    this.container = document.querySelector(
-      `[${this.attrs.filterContainer}="${filterName}"]`
+    this.filterGroupName = filterGroupName;
+    this.onFilterChange = onFilterChange;
+    this.filtersConfig = filtersConfig;
+    this.debounceDelay = debounceDelay;
+
+
+    this.filterContainer = document.querySelector(
+        `[${this.customAttributes.container}="${this.filterGroupName}"]`
     );
-    if (!this.container) return;
-    this.onUpdate = onUpdate;
-    if (filterCfg) {
-      this.applyFilters(filterCfg);
-    }
+    if (!this.filterContainer) return;
 
-    this.debouncedHandleEvent = getDebouncedFn(
-      this.handleEvent,
-      debounceDelayForInput
-    ).bind(this);
+    this.debouncedHandleInput = getDebouncedFn(
+        this.#handleInput,
+        this.debounceDelay
+    );
 
-    this.#bindFilterEvents();
+    this.#initializeFilters();
+    this.#bindEvents();
   }
 
-  #bindFilterEvents() {
-    document.addEventListener("input", this.debouncedHandleEvent, true);
-    document.addEventListener("change", (e) => this.handleEvent(e), true);
-  }
+  #initializeFilters() {
+    Object.entries(this.filtersConfig).forEach(([name, config]) => {
+      const filterElement = this.#getFilterElement(name);
+      if (!filterElement) return;
 
-  #notifyChange(changeData) {
-    if (typeof this.onUpdate === "function") {
-      this.onUpdate(changeData);
-    }
-    const event = new CustomEvent("filter::changed", {
-      detail: changeData,
+      if (filterElement.type === "checkbox" || filterElement.type === "radio") {
+        filterElement.checked = config.isChecked || false;
+      } else if (
+          filterElement.type === "text" ||
+          filterElement.tagName === "INPUT"
+      ) {
+        filterElement.value = config.value || "";
+      }
     });
-    this.container.dispatchEvent(event);
   }
 
-  // Обработчик изменения состояния фильтра
-  handleEvent(event) {
-    const target = event.target;
+  #bindEvents() {
+    this.filterContainer.addEventListener("input", this.debouncedHandleInput);
+    this.filterContainer.addEventListener("change", (event) =>
+        this.#handleChange(event)
+    );
+  }
 
-    // Получаем имя фильтра
-    const filterName = target.getAttribute(this.attrs.filterItem);
+  #getFilterElement(filterName) {
+    return this.filterContainer.querySelector(
+        `[${this.customAttributes.filterItem}="${filterName}"]`
+    );
+  }
 
-    const filterParentName = target.getAttribute(this.attrs.filterParentName);
+  #handleInput = (event) => {
+    this.#processFilterChange(event.target);
+  };
 
-    if (filterParentName !== this.filterName || !filterName) {
+  #handleChange = (event) => {
+    this.#processFilterChange(event.target);
+  };
+
+  #processFilterChange(target) {
+    console.log("Target element:", target);
+
+    const filterName = target.getAttribute(this.customAttributes.filterItem);
+    const parentName = target.getAttribute(this.customAttributes.parentName);
+
+    console.log("Filter changed:", { filterName, parentName, checked: target.checked });
+
+    if (parentName !== this.filterGroupName || !filterName) {
+      console.error("Invalid filter or parent name:", { filterName, parentName });
       return;
     }
 
-    //TODO: switch-case
-    const changeData = {
-      value:
-        target.type === "checkbox" || target.type === "radio"
-          ? null
-          : target.value, // Для чекбоксов и радио кнопок значение null
-      isChecked:
-        target.type === "checkbox" || target.type === "radio"
-          ? target.checked // Для чекбоксов и радио кнопок состояние checked
-          : false,
-      isDisabled: target.disabled || false, // Если элемент отключен
+
+    const updatedFilter = {
+      [filterName]: {
+        value: target.type === "checkbox" || target.type === "radio" ? null : target.value,
+        isChecked: target.type === "checkbox" || target.type === "radio" ? target.checked : false,
+        isDisabled: target.disabled || false,
+      },
     };
 
-    console.debug("Обработано изменение фильтра:", changeData);
-
-    // Оповещаем о произошедших изменениях
-    this.#notifyChange({ [filterName]: changeData });
+    this.onFilterChange?.(updatedFilter);
   }
 
-  //Обновления UI
-  applyFilters(filtersCfg) {
-    //TODO: опять подвязка на inputs. Нужно подумать над этим
-    const { inputs } = filtersCfg;
-    Object.entries(inputs).forEach(([name, data]) => {
-      const filterItem = document.querySelector(
-        `[${this.attrs.filterItem}="${name}"][${this.attrs.filterParentName}="${this.filterName}"]`
-      );
+  applyFilters(newConfig) {
+    this.filtersConfig = { ...this.filtersConfig, ...newConfig };
+    this.#initializeFilters();
+  }
 
-      if (!filterItem) {
-        console.warn(`Элемент фильтра с именем "${name}" не найден.`);
-        return;
-      }
-
-      // Устанавливаем значения в зависимости от типа элемента. В будущем лучше переделать на switch-case
-      if (filterItem.type === "checkbox" || filterItem.type === "radio") {
-        filterItem.checked = Boolean(data.isChecked);
-      } else if (filterItem.type === "text" || filterItem.tagName === "INPUT") {
-        filterItem.value = data.value || "";
-      } else {
-        console.warn(
-          `Тип элемента фильтра "${filterItem.tagName}" не поддерживается.`
-        );
-      }
-    });
+  destroy() {
+    this.filterContainer.removeEventListener("input", this.debouncedHandleInput);
+    this.filterContainer.removeEventListener("change", this.#handleChange);
   }
 }
