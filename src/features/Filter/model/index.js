@@ -5,7 +5,7 @@ export class FilterManager {
                 filterGroupName,
                 onFilterChange,
                 filtersConfig = {},
-                debounceDelay = 300,
+                debounceDelay = 1000,
                 customAttributes = {},
               }) {
     this.customAttributes = {
@@ -45,7 +45,7 @@ export class FilterManager {
           filterElement.type === "text" ||
           filterElement.tagName === "INPUT"
       ) {
-        filterElement.value = config.value || "";
+        filterElement.value = config.persistent ? config.value || "" : "";
       }
     });
   }
