@@ -2,6 +2,27 @@
     width: 57rem;
     height: 22.5rem;
     box-shadow: var(--boxShadowDefault);
+    border-radius: 16px;
+    padding: 4rem;
 
+    &__message {
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-align: center;
+        color: var(--colorBlack);
+    }
 
+    &__buttons {
+        display: flex;
+        justify-content: center;
+        margin-top: auto;
+        gap: 3rem;
+    }
+}
+
+.confirm-modal .f-button.is-close-btn {
+    color: var(--colorGrayDark);
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
 }
