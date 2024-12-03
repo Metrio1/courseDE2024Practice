@@ -1,10 +1,11 @@
 import { Fancybox } from "@fancyapps/ui";
+import { getConfirmModalTemplate } from "#shared/ui/ConfirmModal/ui/ConfirmModal.js";
 
 /**
- * Класс для управления модальными окнами с использованием Fancybox (Singleton).
+ * Класс для управления модальными окнами (Singleton).
  */
 export class ModalManager {
-    static instance = null;
+    static #instance = null;
 
     static selectors = {
         fancyboxContent: ".fancybox__content",
@@ -12,88 +13,82 @@ export class ModalManager {
         cancelBtn: "[data-js-cancel-btn]",
     };
 
+    #defaultOptions;
+
     constructor(options = {}) {
-        if (ModalManager.instance) {
-            return ModalManager.instance;
+        if (ModalManager.#instance) {
+            return ModalManager.#instance;
         }
 
-        this.defaultOptions = {
-            animationClass: "fade", // Класс для анимации
-            overlayColor: "rgba(0, 0, 0, 0.7)", // Цвет подложки
-            trapFocus: false, // Настройка фокуса
+        this.#defaultOptions = {
+            animationClass: "fade",
+            overlayColor: "rgba(0, 0, 0, 0.7)",
+            trapFocus: true,
             defaultType: "html",
+            autoFocus: true,
             ...options,
         };
 
-        ModalManager.instance = this;
+        ModalManager.#instance = this;
     }
 
+    /**
+     * Открытие модального окна.
+     * @param {string|HTMLElement} src - Контент модального окна.
+     * @param {Object} options - Опции для модального окна.
+     */
     open(src, options = {}) {
-        const finalOptions = {
-            ...this.defaultOptions,
-            ...options,
-        };
-
-        try {
-            Fancybox.show([{ src, type: options.type || "html" }], finalOptions);
-        } catch (error) {
-            console.error("Ошибка при открытии модального окна:", error);
-        }
+        const finalOptions = { ...this.#defaultOptions, ...options };
+        Fancybox.show([{ src, type: options.type || "html" }], finalOptions);
     }
 
-    openConfirmModal({
-                         message,
-                         onConfirm = () => {},
-                         onCancel = () => {},
-                     } = {}) {
-        const content = `
-      <div class="confirmModal">
-        <p>${message}</p>
-        <div class="modal-buttons">
-          <button data-js-confirm-btn class="btn btn--isConfirm">Да</button>
-          <button data-js-cancel-btn class="btn btn--isCancel">Нет</button>
-        </div>
-      </div>
-    `;
+    /**
+     * Открытие модального окна подтверждения действия.
+     * @param {Object} params - Параметры для модального окна подтверждения.
+     */
+    openConfirmModal({ message, onConfirm = () => {}, onCancel = () => {} }) {
+        const content = getConfirmModalTemplate(message);
 
-        Fancybox.show([{ src: content, type: "html" }], {
-            ...this.defaultOptions,
+        this.open(content, {
             on: {
-                reveal: () => {
-                    try {
-                        const fancyboxContent = document.querySelector(
-                            ModalManager.selectors.fancyboxContent
-                        );
-
-                        fancyboxContent
-                            .querySelector(ModalManager.selectors.confirmBtn)
-                            .addEventListener("click", () => {
-                                onConfirm();
-                                ModalManager.closeAll(); // Закрываем все модальные окна
-                            });
-
-                        fancyboxContent
-                            .querySelector(ModalManager.selectors.cancelBtn)
-                            .addEventListener("click", () => {
-                                onCancel();
-                                ModalManager.closeAll(); // Закрываем все модальные окна
-                            });
-                    } catch (error) {
-                        console.error("Ошибка при открытии модального окна:", error);
-                    }
-                },
+                reveal: () => this.#attachConfirmModalListeners(onConfirm, onCancel),
             },
         });
     }
 
+    #attachConfirmModalListeners(onConfirm, onCancel) {
+        const fancyboxContent = document.querySelector(ModalManager.selectors.fancyboxContent);
+
+        if (!fancyboxContent) return;
+
+        const confirmBtn = fancyboxContent.querySelector(ModalManager.selectors.confirmBtn);
+        const cancelBtn = fancyboxContent.querySelector(ModalManager.selectors.cancelBtn);
+
+        confirmBtn?.addEventListener("click", () => {
+            onConfirm();
+            ModalManager.closeAll();
+        });
+
+        cancelBtn?.addEventListener("click", () => {
+            onCancel();
+            ModalManager.closeAll();
+        });
+    }
+
+    /**
+     * Закрытие всех модальных окон.
+     */
     static closeAll() {
         Fancybox.close();
     }
 
+    /**
+     * Получение экземпляра класса (Singleton).
+     */
     static getInstance(options = {}) {
-        if (!ModalManager.instance) {
-            ModalManager.instance = new ModalManager(options);
+        if (!ModalManager.#instance) {
+            ModalManager.#instance = new ModalManager(options);
         }
-        return ModalManager.instance;
+        return ModalManager.#instance;
     }
 }
