@@ -20,9 +20,13 @@ export class ModalManager {
             return ModalManager.#instance;
         }
 
+        const overlayColor = getComputedStyle(document.documentElement)
+            .getPropertyValue("--colorNight")
+            .trim();
+
         this.#defaultOptions = {
             animationClass: "fade",
-            overlayColor: "rgba(0, 0, 0, 0.7)",
+            overlayColor: overlayColor,
             trapFocus: true,
             defaultType: "html",
             autoFocus: true,
