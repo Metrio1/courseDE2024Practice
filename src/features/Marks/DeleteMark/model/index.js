@@ -1,5 +1,5 @@
 import { deleteMark } from "../api/index.js";
-import { ModalManager } from "#shared/lib/plugins/ModalManager.js";
+import { ModalManager } from "#shared/lib/plugins/ModalManager";
 import { getAttr } from "#shared/lib/utils";
 
 /**
@@ -16,7 +16,7 @@ export class DeleteMarkModel {
 
   handleDeleteMark = (event) => {
     const button = event.target.closest(
-      DeleteMarkModel.selectors.deleteMarkBtn
+        DeleteMarkModel.selectors.deleteMarkBtn
     );
 
     if (!button) {
@@ -24,7 +24,7 @@ export class DeleteMarkModel {
     }
 
     const markId = button.getAttribute(
-      getAttr(DeleteMarkModel.selectors.deleteMarkBtn)
+        getAttr(DeleteMarkModel.selectors.deleteMarkBtn)
     );
 
     if (!markId) {
@@ -41,14 +41,16 @@ export class DeleteMarkModel {
 
     ModalManager.getInstance().openConfirmModal({
       message: "Вы уверены, что хотите удалить метку?",
-      onConfirm: async (markId) => {
-        await handleDelete(markId);
-        ModalManager.getInstance().closeAll();
+      onConfirm: async () => {
+        await handleDelete(markId); // Используем замыкание для передачи markId
+        ModalManager.closeAll();
       },
       onCancel: () => {
         ModalManager.closeAll();
       },
     });
+
+
   };
 
   #bindEvents() {
