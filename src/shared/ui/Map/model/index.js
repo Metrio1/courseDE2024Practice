@@ -10,7 +10,6 @@ import { checkMapInstance } from "../config/lib/checkMapInstance.js";
 import { getExternalScript } from "#shared/lib/utils/getExtetnalScript";
 import {Ballon} from "#entities/ui/Ballon";
 import { DeleteMarkBtn } from "#features/Marks/DeleteMark/index.js";
-import {EditMarkBtn} from "#features/Marks/EditMark/ui/EditMarkBtn.js";
 import { UpdateMarkBtn } from "#features/Marks/UpdateMark/ui/Updatemark.js";
 /**
  *
@@ -258,10 +257,10 @@ export class YandexMap {
       )
       .join("");
 
-    const editButton = EditMarkBtn({ markId: id });
+    const updateButton = UpdateMarkBtn({ markId: id });
     const deleteButton = DeleteMarkBtn({ markId: id });
 
-    return Ballon(info, [editButton, deleteButton]);
+    return Ballon(info, [updateButton, deleteButton]);
   }
 
   @checkMapInstance

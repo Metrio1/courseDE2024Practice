@@ -7,6 +7,7 @@ import { MapApp } from "#widgets/MapApp/model/index.js";
 import {StoreService} from "#shared/lib/services/StoreService";
 import {createStore} from "#shared/store/store";
 import { DeleteMarkModel } from "#features/Marks/DeleteMark/model/index.js";
+import { UpdateMarkModel } from "#features/Marks/UpdateMark/model/index.js";
 
 async function initMSW() {
   if (process.env.NODE_ENV === "development") {
@@ -43,4 +44,5 @@ Promise.all([initMSW(), domReady()]).then(() => {
   window.App.CustomSelect = CustomSelect;
 
   new DeleteMarkModel(window.App.StoreServiceForMap);
+  new UpdateMarkModel(window.App.StoreServiceForMap);
 });
