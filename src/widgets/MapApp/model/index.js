@@ -25,9 +25,12 @@ export class MapApp {
       zoom: 10,
     });
 
-    this.initMap();
-    this.#bindYandexMapEvents();
-    this.subscribeForStoreService();
+
+    this.initMap().then(() => {
+      this.#bindYandexMapEvents();
+      this.subscribeForStoreService();
+      this.loadAndUpdateFilters();
+    });
   }
 
   // Метод инициализации карты
@@ -47,7 +50,11 @@ export class MapApp {
   updateMapFilters(updatedFilters) {
     const currentFilters = this.storeService.getFilters();
 
-    // Объединяем текущие фильтры с обновлёнными
+    // Log current and updated filters
+    console.log("Current filters before update:", currentFilters);
+    console.log("Updated filters:", updatedFilters);
+
+    // Merge current and updated filters
     const newFilters = {
       ...currentFilters,
       ...updatedFilters,
@@ -55,29 +62,27 @@ export class MapApp {
 
     console.log("Merged filters:", newFilters);
 
-    // Проверяем, есть ли в изменённом фильтре поле для адреса (например, `search`)
+    // Check for address filter
     if (updatedFilters?.search?.value) {
       const address = updatedFilters.search.value;
-      this.handleCenterMapByAddress(address); // Центрируем карту на введённом адресе
+      this.handleCenterMapByAddress(address); // Center map on entered address
     }
 
-    // Сохраняем обновлённое состояние в store
-    this.storeService.updateStore("setFilters", newFilters);
+    const currentState = this.storeService.getFilters().inputs;
+    const updatedState = { ...currentState, ...newFilters };
+    // Update store with new filters
+    this.storeService.updateStore("setFilters", { inputs: updatedState });
 
+    // Get filtered markers
     const filteredMarkers = this.getFilteredMarkers();
+    console.log("Filtered markers:", filteredMarkers);
+
+    // Render filtered markers on the map
     this.yandexMap.renderMarks(filteredMarkers);
   }
 
   // Загрузка и применение конфигурации фильтров
-  async loadAndUpdateFilters() {
-    try {
-      const filters = await this.getFiltersCfg();
-      this.storeService.updateStore("setFilters", filters);
-      this.filterManager.applyFilters(filters);
-    } catch (error) {
-      console.error("Ошибка при получении конфигурации фильтров:", error);
-    }
-  }
+
 
   // Получение меток с сервера
   async getMarks() {
@@ -91,19 +96,27 @@ export class MapApp {
   }
 
   // Получение конфигурации фильтров
+  loadAndUpdateFilters() {
+    (async () => {
+      try {
+        const filters = await this.getFiltersCfg();
+        this.storeService.updateStore("setFilters", filters);
+        this.filterManager.applyFilters(filters);
+      } catch (error) {
+        console.error("Ошибка при получении конфигурации фильтров:", error);
+      }
+    })();
+  }
+
   async getFiltersCfg() {
-    try {
-      const response = await this.apiClient.get(API_ENDPOINTS.config.list);
-      return response?.data || {};
-    } catch (error) {
-      console.error("Ошибка при получении конфигурации фильтров:", error);
-      return {};
-    }
+    return this.apiClient
+        .get(API_ENDPOINTS.config.list)
+        .then((res) => res?.data);
   }
 
   // Фильтрация меток
   getFilteredMarkers() {
-    const filters = this.storeService.getFilters();
+    const filters = this.storeService.getFilters().inputs;
 
     if (!filters || typeof filters !== "object") {
       console.error("Filters not found or malformed:", filters);

@@ -1,5 +1,5 @@
 import { deleteMark } from "../api/index.js";
-import { ModalManager } from "#shared/lib/plugins/ModalManager";
+import { ModalManager } from "#shared/lib/plugins/ModalManager.js";
 import { getAttr } from "#shared/lib/utils";
 
 /**
@@ -10,8 +10,9 @@ export class DeleteMarkModel {
     deleteMarkBtn: "[data-js-delete-mark-btn]",
   };
 
-  constructor() {
-    this.#initEventListeners();
+  constructor(storeService) {
+      this.storeService = storeService;
+      this.#initEventListeners();
   }
 
   /**
@@ -26,12 +27,27 @@ export class DeleteMarkModel {
     const markId = button.getAttribute(getAttr(DeleteMarkModel.selectors.deleteMarkBtn));
     if (!markId) return;
 
+    const handleDelete = async () => {
+      try {
+        await deleteMark(markId); // Попытка удалить метку через API
+        this.storeService.updateStore(
+          "setMarkers",
+          this.storeService.getMarkers().filter((item) => item.id !== markId)
+        );
+      } catch (error) {
+        console.error("Ошибка при удалении метки:", error);
+      }
+    };
+
     ModalManager.getInstance().openConfirmModal({
       message: "Вы уверены, что хотите удалить метку?",
-      onConfirm: async () => {
-        await this.#deleteMarkById(markId);
-      },
-      onCancel: ModalManager.closeAll,
+        onConfirm: async (markId) => {
+            await handleDelete(markId);
+            ModalManager.getInstance().closeAll();
+        },
+        onCancel: () => {
+            ModalManager.getInstance().closeAll();
+        }
     });
   };
 

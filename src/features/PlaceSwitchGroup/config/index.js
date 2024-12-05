@@ -17,10 +17,10 @@ export const switchConfigDefault = [
     dataJsFilterParentName: "marks",
   },
   {
-    label: "ТРК",
-    name: "trk",
+    label: "Клуб",
+    name: "club",
     checked: false,
-    dataJsFilterItem: "trk",
+    dataJsFilterItem: "club",
     dataJsFilterParentName: "marks",
   },
   {

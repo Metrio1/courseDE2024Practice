@@ -11,7 +11,6 @@ import {
   TheatreIcon, LocationIcon, RouteIcon, DirectIcon,
 } from "#shared/ui/Icons/index";
 import { Switch } from "#shared/ui/Switch/index";
-import {MapButtons} from "#shared/ui/MapButtons/index.js";
 
 /**
  * Страница приложения
@@ -35,13 +34,6 @@ const IndexPage = () => `
         </aside>
         <div class="mapLayout__map">
           <div id="map1" class="yandexMap" style="width: 1407px; height: 658px;"></div>
-            ${MapButtons({
-              buttons: [
-                { text: "Добавить метку", iconSlot: LocationIcon() },
-                { text: "Построить маршрут", iconSlot: RouteIcon() },
-                { text: "Мои маршруты", iconSlot: DirectIcon() },
-              ],
-            })}
         </div>
         </div>
       </div>
@@ -123,11 +115,13 @@ const IndexPage = () => `
         </div>  
         </div>
       </main>
-      <div id="modalSuccess">
-          <p>Успешно!</p>
-      </div>
-      <div id="modalError">
+      <div style="display: none">
+        <div id="modalSuccess">
+            <p>Успешно!</p>
+        </div>
+        <div id="modalError">
           <p>Не успешно!</p>
+        </div>
       </div>
     </body>
   </html>

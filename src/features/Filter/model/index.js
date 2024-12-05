@@ -1,5 +1,8 @@
 import { getDebouncedFn } from "#shared/lib/utils";
 
+/**
+ *
+ */
 export class FilterManager {
   constructor({
                 filterGroupName,
@@ -102,6 +105,13 @@ export class FilterManager {
   }
 
   applyFilters(newConfig) {
+
+      //TODO: опять подвязка на inputs. Нужно подумать над этим
+      if (!newConfig.inputs) {
+      console.warn("Не переданы данные фильтров.");
+      return;
+  }
+
     this.filtersConfig = { ...this.filtersConfig, ...newConfig };
     this.#initializeFilters();
   }

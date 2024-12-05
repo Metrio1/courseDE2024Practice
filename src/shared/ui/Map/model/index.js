@@ -11,7 +11,7 @@ import { getExternalScript } from "#shared/lib/utils/getExtetnalScript";
 import {Ballon} from "#entities/ui/Ballon";
 import { DeleteMarkBtn } from "#features/Marks/DeleteMark/index.js";
 import {EditMarkBtn} from "#features/Marks/EditMark/ui/EditMarkBtn.js";
-
+import { UpdateMarkBtn } from "#features/Marks/UpdateMark/ui/Updatemark.js";
 /**
  *
  */
