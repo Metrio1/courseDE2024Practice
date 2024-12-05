@@ -35,13 +35,12 @@ Promise.all([initMSW(), domReady()]).then(() => {
   const storageName = "storageName";
 
   const store = createStore(storageName);
-  const storeService = new StoreService(store);
+  window.App.StoreServiceForMap = new StoreService(store);
 
-  new MapApp(storeService, apiClient);
+  new MapApp(window.App.StoreServiceForMap, apiClient);
 
   new CustomSelect();
-  window.App.ChoiceSelectModel = CustomSelect;
+  window.App.CustomSelect = CustomSelect;
 
-  new DeleteMarkModel();
-
+  new DeleteMarkModel(window.App.StoreServiceForMap);
 });
