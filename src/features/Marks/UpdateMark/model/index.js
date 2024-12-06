@@ -1,6 +1,6 @@
 import { getUpdateMarkModalContent } from "../ui/getUpdateMarkModalContent.js";
-import { API_ENDPOINTS } from "#shared/config/constants.js";
-import { ModalManager } from "#shared/lib/plugins/ModalManager";
+import { API_ENDPOINTS, API_URL } from "#shared/config/constants.js";
+import { ModalManager } from "#shared/lib/plugins/ModalManager.js";
 import { CustomSelect } from "#shared/ui/CustomSelect/model/index.js";
 
 /**
@@ -17,28 +17,23 @@ export class UpdateMarkModel {
     this.#bindEvents();
   }
 
+
   #handleClick(e) {
     const parent = e.target.closest(`[${this.attrs.updateMark}]`);
     if (!parent) return;
 
-    const markInfoAttr = parent.getAttribute(this.attrs.updateMark);
-    if (!markInfoAttr) {
-      console.error("Атрибут data-js-update-mark-info не найден или пустой.");
-      return;
-    }
-
     try {
-      const markInfo = JSON.parse(markInfoAttr);
-      console.debug("Полученные данные метки:", markInfo);
+      const markInfo = JSON.parse(parent.getAttribute(this.attrs.updateMark));
+      console.log("markInfo");
       ModalManager.getInstance().open(
           getUpdateMarkModalContent({
             markInfo,
-            url: API_ENDPOINTS.marks.update,
+            url: `${API_URL}/${API_ENDPOINTS.marks.update}`,
           }),
           {
             on: {
               reveal: () => {
-                CustomSelect.createCustomSelect(
+                CustomSelect.createInstance(
                     document.querySelector(
                         `[${this.attrs.selectTypeMark}="${markInfo.id}"]`
                     )
@@ -49,8 +44,7 @@ export class UpdateMarkModel {
           }
       );
     } catch (error) {
-      console.error("Ошибка при парсинге JSON:", error);
-      console.error("Строка, которую пытались парсить:", markInfoAttr);
+      console.error("Ошибка при открытии модалки обновления метки:", error);
     }
   }
 

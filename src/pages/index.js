@@ -115,6 +115,11 @@ const IndexPage = () => `
         </div>  
         </div>
       </main>
+
+      <form>
+          
+      </form>
+
       <div style="display: none">
         <div id="modalSuccess">
             <p>Успешно!</p>
