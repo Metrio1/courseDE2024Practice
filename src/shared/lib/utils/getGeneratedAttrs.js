@@ -1,18 +1,22 @@
 /**
- * Генерируем атрибуты для компонентов
+ * Генерирует атрибуты для компонентов
  * @param {Array} attributes - Массив атрибутов в формате [{ name, value } или строка]
- * @return {String}
+ * @return {String} Сформированные атрибуты
  */
 export const getGeneratedAttrs = (attributes = []) => {
-  return attributes
-      .map((attr) => {
-        if (typeof attr === "string") {
-          return attr;
-        } else if (typeof attr === "object" && attr.name) {
-          return attr.value ? `${attr.name}="${attr.value}"` : `${attr.name}`;
-        }
-        return "";
-      })
-      .filter(Boolean)
-      .join(" ");
+    return attributes
+        .map((attr) => {
+            if (typeof attr === "string") {
+                return attr;
+            }
+            if (typeof attr === "object" && attr.name) {
+                const value =
+                    typeof attr.value === "object"
+                        ? `'${JSON.stringify(attr.value)}'`
+                        : `"${attr.value}"`;
+                return attr.value ? `${attr.name}=${value}` : attr.name;
+            }
+            return "";
+        })
+        .join(" ");
 };

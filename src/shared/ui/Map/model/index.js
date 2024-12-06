@@ -257,7 +257,7 @@ export class YandexMap {
       )
       .join("");
 
-    const updateButton = UpdateMarkBtn({ markId: id });
+    const updateButton = UpdateMarkBtn({ markInfo: info });
     const deleteButton = DeleteMarkBtn({ markId: id });
 
     return Ballon(info, [updateButton, deleteButton]);

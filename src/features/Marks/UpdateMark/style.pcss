@@ -1,4 +1,18 @@
 .updateModalContent {
   --updateModalContentMinWidth: 100rem;
   min-width: var(--updateModalContentMinWidth);
+  border-radius: 2rem;
+  padding: 8rem 4rem 3rem 4rem;
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+
+    &Body {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+  }
 }
