@@ -57,8 +57,8 @@
       position: absolute;
       top: 0.5rem;
       right: 0.5rem;
-      width: 2rem;
-      height: 2rem;
+      width: 1.5rem;
+      height: 1.5rem;
       border: none;
       background-color: var(--colorWhite);
       color: var(--colorBlack);
@@ -95,12 +95,13 @@
 
     &Hint {
       display: flex;
-      flex-direction: column; /* Ставит текст друг под другом */
-      gap: 0.5rem; /* Расстояние между строками */
+      align-items: center;
+      flex-direction: column;
+      gap: 0.5rem;
+      color: var(--colorGrayDark);
 
       &-text {
         font-size: 1rem;
-        color: var(--colorGrayDark);
 
         &--top {
           font-size: 1.25rem;
@@ -137,5 +138,8 @@
     }
   }
 
-
+  &__actions {
+    display: flex;
+    justify-content: space-between;
+  }
 }

@@ -5,7 +5,7 @@ import {
   RestIcon,
   MusicIcon,
   TheatreIcon,
-  BarIcon,
+  BarIcon, ImageIcon, CancelIcon, SaveIcon,
 } from "#shared/ui/Icons/index";
 
 /**
@@ -140,6 +140,7 @@ export const getUpdateMarkModalContent = ({
           />
           <label for="fileUpload" class="updateModalContent__uploadArea">
             <div class="updateModalContent__uploadHint">
+                ${ImageIcon()}
               <div class="updateModalContent__uploadHint-text updateModalContent__uploadHint-text--top">Перетащите файл в эту область</div>
               <div class="updateModalContent__uploadHint-text updateModalContent__uploadHint-text--bottom">jpg, png, bmp, до 5 МБ</div>
             </div>
@@ -147,16 +148,32 @@ export const getUpdateMarkModalContent = ({
         </div>
       </div>
       </div>
-   
-      ${Button({
-        text: "Сохранить",
-        extraAttrs: [
-          {
-            name: "type",
-            value: "submit",
-          },
-        ],
-      })}
+      
+      <div class="updateModalContent__actions">
+        ${Button({
+          text: "Отмена",
+          extraClasses: [
+            "button--no-icon",
+            "btn--isRedIcon",
+          ],
+          extraAttrs: [
+            {
+              name: "type",
+              value: "submit",
+            },
+          ],
+        })}
+            ${Button({
+          text: "Сохранить",
+          iconSlot: SaveIcon(),
+          extraAttrs: [
+            {
+              name: "type",
+              value: "submit",
+            },
+          ],
+        })}
+      </div>
     </div>
   </form>
   </div>`;

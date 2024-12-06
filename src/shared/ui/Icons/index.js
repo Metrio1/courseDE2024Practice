@@ -12,5 +12,7 @@ export { TheatreIcon } from "./ui/TheatreIcon.js";
 export { DirectIcon } from "./ui/DirectIcon.js";
 export { LocationIcon } from "./ui/LocationIcon.js";
 export { RouteIcon } from "./ui/RouteIcon.js";
-export { LoopIcon } from "./ui/LoopIcon.js"
+export { LoopIcon } from "./ui/LoopIcon.js";
+export { ImageIcon } from "./ui/ImageIcon.js";
+export { SaveIcon } from "./ui/SaveIcon.js";
 
