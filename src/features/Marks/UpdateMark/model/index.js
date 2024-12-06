@@ -22,16 +22,8 @@ export class UpdateMarkModel {
     const parent = e.target.closest(`[${this.attrs.updateMark}]`);
     if (!parent) return;
 
-    const markInfoRaw = parent.getAttribute(this.attrs.updateMark);
-    console.log("Raw markInfo:", markInfoRaw);
-
-    if (!markInfoRaw) {
-      console.error("Атрибут data-js-update-mark-info пустой или отсутствует.");
-      return;
-    }
-
     try {
-      const markInfo = JSON.parse(markInfoRaw);
+      const markInfo = JSON.parse(parent.getAttribute(this.attrs.updateMark));
       console.log("markInfo");
       ModalManager.getInstance().open(
           getUpdateMarkModalContent({

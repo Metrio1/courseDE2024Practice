@@ -17,79 +17,137 @@ export const getUpdateMarkModalContent = ({
   method = "post",
   iconColor = "var(--colorBlack)",
 }) => {
+  const {
+    title,
+    address: { city = "", house = "", street = "" } = {}, // Дефолтные значения
+  } = markInfo;
+
+  const formattedAddress = [city, street, house].filter(Boolean).join(", ");
+
   return `<div class="updateModalContent" >
   <form class="updateModalContent__form" data-js-form=${JSON.stringify({ url, method, showModalAfterSuccess: "#modalSuccess", redirectUrlAfterSuccess: "/test.html", delayBeforeRedirect: 3000 })}>
     <h3>Редактировать метку</h3>
-    <p>${markInfo.title}</p>
+    <p>${formattedAddress}</p>
     <div class="updateModalContent__formBody">
-        <label>Тип метки
+    
+      <div class="updateModalContent__inputGroup">
+        <label class="updateModalContent__label">Тип метки</label>
+        <div class="updateModalContent__field">
           ${CustomSelect({
-      extraAttrs: [
+    extraAttrs: [
+      {
+        name: "data-js-update-mark-info-select-type",
+        value: markInfo.id,
+      },
+      {
+        name: "name",
+        value: "typeMark",
+      },
+    ],
+    cfg: {
+      preset: "default",
+      itemSelectText: "",
+      searchEnabled: false,
+      choices: [
         {
-          name: "data-js-update-mark-info-select-type",
-          value: markInfo.id,
+          value: "Бar",
+          label: "Бар",
+          selected: markInfo.type === "bars",
+          customProperties: {
+            icon: BarIcon({ iconColor: "var(--colorRed)" }),
+          },
         },
         {
-          name: "name",
-          value: "typeMark",
+          value: "Ресторан",
+          label: "Ресторан",
+          selected: markInfo.type === "restaurant",
+          customProperties: {
+            icon: RestIcon({ iconColor: "var(--colorRed)" }),
+          },
+        },
+        {
+          value: "Ночной клуб",
+          label: "Ночной клуб",
+          selected: markInfo.type === "club",
+          customProperties: {
+            icon: MusicIcon({ iconColor: "var(--colorRed)" }),
+          },
+        },
+        {
+          value: "Театр",
+          label: "Театр",
+          selected: markInfo.type === "theatre",
+          customProperties: {
+            icon: TheatreIcon({ iconColor: "var(--colorRed)" }),
+          },
+        },
+        {
+          value: "Кино",
+          label: "Кино",
+          selected: markInfo.type === "cinema",
+          customProperties: {
+            icon: CinemaIcon({ iconColor: "var(--colorPrimary)" }),
+          },
         },
       ],
-      cfg: {
-        preset: "default",
-        itemSelectText: "",
-        searchEnabled: false,
-        choices: [
-          {
-            value: "Бar",
-            label: "Бар",
-            selected: markInfo.type === "bars",
-            customProperties: {
-              icon: BarIcon({ iconColor: "var(--colorRed)" }),
-            },
-          },
-          {
-            value: "Ресторан",
-            label: "Ресторан",
-            selected: markInfo.type === "restaurant",
-            customProperties: {
-              icon: RestIcon({ iconColor: "var(--colorRed)" }),
-            },
-          },
-          {
-            value: "Ночной клуб",
-            label: "Ночной клуб",
-            selected: markInfo.type === "club",
-            customProperties: {
-              icon: MusicIcon({ iconColor: "var(--colorRed)" }),
-            },
-          },
-          {
-            value: "Театр",
-            label: "Театр",
-            selected: markInfo.type === "theatre",
-            customProperties: {
-              icon: TheatreIcon({ iconColor: "var(--colorRed)" }),
-            },
-          },
-          {
-            value: "Кино",
-            label: "Кино",
-            selected: markInfo.type === "cinema",
-            customProperties: {
-              icon: CinemaIcon({ iconColor: "var(--colorPrimary)" }),
-            },
-          },
-        ],
-      },
-    })}
-        </label>
-      <label>Комментарий пользователя
-        <input type="comment" value="${markInfo.comment}" name="comment" />
-      </label>
-      <label>Фотографии
-      </label>
-      <label>Добавить фото
-      </label>
+    },
+  })}
+        </div>
+      </div>
+      
+      <div class="updateModalContent__inputGroup">
+        <label class="updateModalContent__label">Комментарий пользователя</label>
+        <div class="updateModalContent__field">
+          <textarea type="comment" value="${markInfo.comment}" name="comment" ></textarea>
+        </div>
+      </div>
+      
+      <div class="updateModalContent__inputGroup">
+        <label class="updateModalContent__label">Фотографии</label>
+        <div class="updateModalContent__field">
+        <div class="updateModalContent__photos">
+          <div class="updateModalContent__photo">
+            <img src="/assets/marksDetail/image1.jpg" alt="Фото 1" />
+            <button type="button" class="updateModalContent__photoRemove">×</button>
+          </div>
+          <div class="updateModalContent__photo">
+            <img src="/assets/marksDetail/image2.jpg" alt="Фото 1" />
+            <button type="button" class="updateModalContent__photoRemove">×</button>
+          </div>
+          <div class="updateModalContent__photo">
+            <img src="/assets/marksDetail/image3.jpg" alt="Фото 1" />
+            <button type="button" class="updateModalContent__photoRemove">×</button>
+          </div>
+          <div class="updateModalContent__photo">
+            <img src="/assets/marksDetail/image4.jpg" alt="Фото 1" />
+            <button type="button" class="updateModalContent__photoRemove">×</button>
+          </div>
+        </div>
+        </div>
+      </div>
+      
+      <div class="updateModalContent__inputGroup">
+        <label class="updateModalContent__label">Добавить фото</label>
+        <div class="updateModalContent__field">
+        <div class="updateModalContent__upload">
+          <input
+            type="file"
+            id="fileUpload"
+            name="photos"
+            accept="image/*"
+            multiple
+            hidden
+          />
+          <label for="fileUpload" class="updateModalContent__uploadArea">
+            <div class="updateModalContent__uploadHint">
+              <div class="updateModalContent__uploadHint-text updateModalContent__uploadHint-text--top">Перетащите файл в эту область</div>
+              <div class="updateModalContent__uploadHint-text updateModalContent__uploadHint-text--bottom">jpg, png, bmp, до 5 МБ</div>
+            </div>
+          </label>
+        </div>
+      </div>
+      </div>
+   
       ${Button({
         text: "Сохранить",
         extraAttrs: [

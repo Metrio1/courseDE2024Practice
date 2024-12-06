@@ -21,7 +21,7 @@ export class MapApp {
       apiUrl: "https://api-maps.yandex.ru/2.1/?apikey",
       apiKey: "b4a559eb-311c-4123-8025-480ecdc62549",
       lang: "ru_RU",
-      center: [53.5, 53.9],
+      center: [53.5, 58.8],
       zoom: 10,
     });
 

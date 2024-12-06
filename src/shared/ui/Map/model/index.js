@@ -248,7 +248,7 @@ export class YandexMap {
       title,
         comment,
         images,
-      address: { city, house, street },
+      address: { city = "", house = "", street = "" } = {},
     } = info;
     const slides = info.images
       .map(
