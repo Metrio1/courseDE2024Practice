@@ -16,15 +16,16 @@ import { UpdateMarkBtn } from "#features/Marks/UpdateMark/ui/Updatemark.js";
  */
 export class YandexMap {
   constructor({
-    containerSelector,
-    apiKey,
-    center = [45.751574, 37.573856],
-    zoom = 10,
-    lang = "ru_RU",
-    apiUrl = "https://api-maps.yandex.ru/2.1/?apikey",
-    classNames,
-    iconShapeCfg,
-  }) {
+                containerSelector,
+                apiKey,
+                center = [45.751574, 37.573856],
+                zoom = 10,
+                lang = "ru_RU",
+                apiUrl = "https://api-maps.yandex.ru/2.1/?apikey",
+                classNames,
+                iconShapeCfg,
+                delayForHint = 1000,
+              }) {
     this.containerSelector = containerSelector;
     this.containerMap = document.querySelector(this.containerSelector);
     this.apiKey = apiKey;
@@ -33,10 +34,11 @@ export class YandexMap {
     this.lang = lang;
     this.apiUrl = apiUrl;
     this.instance = null;
-    this.centerMarker = null; //Центральная иконка на карте
+    this.centerMarker = null;
     this.iconsPresets = iconsPresets;
     this.classNames = classNames ?? defaultClassNames;
     this.iconShapeCfg = iconShapeCfg ?? defaultIconShapeCfg;
+    this.delayForHint = delayForHint;
     this.attrs = {
       ballon: "data-js-ballon",
     };
@@ -128,18 +130,21 @@ export class YandexMap {
 
   #createMap() {
     this.instance = new window.ymaps.Map(
-      this.containerMap,
-      {
-        center: this.center,
-        zoom: this.zoom,
-        type: "yandex#map",
-        controls: [],
-      },
-      {
-        suppressMapOpenBlock: true, // Скрыть кнопку открытия карты на Яндексе
-      }
+        this.containerMap,
+        {
+          center: this.center,
+          zoom: this.zoom,
+          type: "yandex#map",
+          controls: [],
+        },
+        {
+          suppressMapOpenBlock: true,
+        }
     );
-    this.addCenterMarker();
+
+    // Показываем подсказку перед добавлением центральной метки
+    this.showHint();
+
     this.#bindEvents();
     return this.instance;
   }
@@ -204,6 +209,52 @@ export class YandexMap {
     });
 
     this.instance.geoObjects.add(placemark);
+  }
+
+  showHint(content) {
+    if (!this.containerMap) return;
+
+    // Создаем элемент подсказки
+    const hintElement = document.createElement("div");
+    hintElement.className = `${this.classNames.hintContainer}`;
+
+    // Добавляем иконку и текст
+    hintElement.innerHTML = `
+    <div class="${this.classNames.hintIcon}">${this.iconsPresets["centerMarker"]}</div>
+    <div class="${this.classNames.hintText}">
+      <strong>Адрес можно выбрать на карте</strong><br>
+      Перетащите метку или кликните по карте.
+    </div>
+  `;
+
+    // Добавляем подсказку на карту
+    this.containerMap.appendChild(hintElement);
+
+    // Применяем анимацию
+    requestAnimationFrame(() => {
+      hintElement.classList.add(`${this.classNames.hintVisible}`);
+    });
+
+    // Устанавливаем таймер для скрытия
+    setTimeout(() => this.hideHint(hintElement), this.delayForHint ?? 5000);
+  }
+
+  hideHint(hintElement) {
+    if (!hintElement || !this.containerMap) return;
+
+    // Удаляем класс видимости
+    hintElement.classList.remove(`${this.classNames.hintVisible}`);
+
+    // Удаляем элемент после завершения анимации
+    hintElement.addEventListener(
+        "transitionend",
+        () => {
+          hintElement.remove();
+          // Добавляем центральную метку после завершения анимации
+          this.addCenterMarker();
+        },
+        { once: true }
+    );
   }
 
   @checkMapInstance

@@ -12,6 +12,10 @@ export const classNames = {
   ballonLayout: "yandexMap__ballonLayout",
   mark: "yandexMap__mark",
   centerMarker: "yandexMap__centerMarker",
+  hintContainer: "yandexMap__hintContainer",
+  hintVisible: "yandexMap__hintContainer--visible",
+  hintIcon: "yandexMap__hintContainer-icon",
+  hintText: "yandexMap__hintContainer-hintText",
 };
 
 export const iconShapeCfg = {
