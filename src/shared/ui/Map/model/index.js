@@ -24,7 +24,7 @@ export class YandexMap {
                 apiUrl = "https://api-maps.yandex.ru/2.1/?apikey",
                 classNames,
                 iconShapeCfg,
-                delayForHint = 2000,
+                delayForHint = 5000,
               }) {
     this.containerSelector = containerSelector;
     this.containerMap = document.querySelector(this.containerSelector);
