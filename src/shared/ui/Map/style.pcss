@@ -45,18 +45,26 @@
     }
 
     &-icon {
+      width: 4rem;
+      height: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       position: relative;
       transition: transform 0.3s;
 
       &--shifted {
-        transform: translateY(6.6rem);
+        transform: translateY(5.6rem);
       }
     }
 
-    &--visible {
+    &-text {
+      opacity: 1;
+      transition: transform 0.1s;
+    }
 
+    &--visible {
       pointer-events: all;
-      transition: opacity 0.3s, transform 0.3s;
 
       &::before {
         opacity: 0.4;
@@ -105,11 +113,15 @@
 
   &__centerMarker {
     position: absolute;
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     top: 50%;
     left: 50%;
-    pointer-events: none;
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1.2);
+    transform: translate(-50%, -50%);
     transition: opacity 0.3s, transform 0.3s;
   }
 }

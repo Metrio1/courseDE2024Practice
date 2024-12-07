@@ -230,8 +230,6 @@ export class YandexMap {
     // Добавляем подсказку на карту
     this.containerMap.appendChild(hintElement);
 
-
-
     // Применяем анимацию
     requestAnimationFrame(() => {
       hintElement.classList.add(`${this.classNames.hintVisible}`);
