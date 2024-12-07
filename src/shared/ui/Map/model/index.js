@@ -24,7 +24,7 @@ export class YandexMap {
                 apiUrl = "https://api-maps.yandex.ru/2.1/?apikey",
                 classNames,
                 iconShapeCfg,
-                delayForHint = 1000,
+                delayForHint = 2000,
               }) {
     this.containerSelector = containerSelector;
     this.containerMap = document.querySelector(this.containerSelector);
@@ -211,7 +211,7 @@ export class YandexMap {
     this.instance.geoObjects.add(placemark);
   }
 
-  showHint(content) {
+  showHint() {
     if (!this.containerMap) return;
 
     // Создаем элемент подсказки
@@ -230,6 +230,8 @@ export class YandexMap {
     // Добавляем подсказку на карту
     this.containerMap.appendChild(hintElement);
 
+
+
     // Применяем анимацию
     requestAnimationFrame(() => {
       hintElement.classList.add(`${this.classNames.hintVisible}`);
@@ -241,6 +243,13 @@ export class YandexMap {
 
   hideHint(hintElement) {
     if (!hintElement || !this.containerMap) return;
+
+    const hintIcon = hintElement.querySelector(`.${this.classNames.hintIcon}`);
+    if (hintIcon) {
+      requestAnimationFrame(() => {
+        hintIcon.classList.add(`${this.classNames.hintIcon}--shifted`);
+      });
+    }
 
     // Удаляем класс видимости
     hintElement.classList.remove(`${this.classNames.hintVisible}`);

@@ -9,8 +9,6 @@
   border-radius: 5rem;
   overflow: hidden;
 
-
-
   &__hintContainer {
     position: absolute;
     box-sizing: border-box;
@@ -46,12 +44,21 @@
       z-index: -1; /* Помещаем фон под содержимое */
     }
 
-    &--visible {
-      pointer-events: all;
+    &-icon {
+      position: relative;
+      transition: transform 0.3s;
 
-      /* Видимость фона */
+      &--shifted {
+        transform: translateY(6.6rem);
+      }
+    }
+
+    &--visible {
+
+      pointer-events: all;
+      transition: opacity 0.3s, transform 0.3s;
+
       &::before {
-        //transition: opacity 0.3s, transform 0.3s;
         opacity: 0.4;
       }
     }
@@ -100,11 +107,10 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 4rem;
-    height: 4rem;
     pointer-events: none;
     opacity: 1;
     transform: translate(-50%, -50%) scale(1.2);
+    transition: opacity 0.3s, transform 0.3s;
   }
 }
 

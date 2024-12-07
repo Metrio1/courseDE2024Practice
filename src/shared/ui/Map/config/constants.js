@@ -16,6 +16,7 @@ export const classNames = {
   hintVisible: "yandexMap__hintContainer--visible",
   hintIcon: "yandexMap__hintContainer-icon",
   hintText: "yandexMap__hintContainer-hintText",
+  hintHidden: "yandexMap__hintContainer--hidden",
 };
 
 export const iconShapeCfg = {
