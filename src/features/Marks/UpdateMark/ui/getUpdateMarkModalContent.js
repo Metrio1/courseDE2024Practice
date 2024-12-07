@@ -154,7 +154,7 @@ export const getUpdateMarkModalContent = ({
           text: "Отмена",
           extraClasses: [
             "button--no-icon",
-            "btn--isRedIcon",
+            "btn__isRedLabel",
           ],
           extraAttrs: [
             {

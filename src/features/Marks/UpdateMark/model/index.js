@@ -40,7 +40,7 @@ export class UpdateMarkModel {
                 );
               },
             },
-            closeButton: false,
+            closeButton: true,
           }
       );
     } catch (error) {
