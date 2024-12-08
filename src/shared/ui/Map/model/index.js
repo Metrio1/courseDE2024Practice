@@ -1,6 +1,7 @@
 import Swiper from "swiper";
 import { Pagination } from "swiper/modules";
 import {
+  yandexMapDefaults,
   iconsPresets,
   classNames as defaultClassNames,
   yandexMapCustomEventNames,
@@ -18,10 +19,10 @@ export class YandexMap {
   constructor({
                 containerSelector,
                 apiKey,
-                center = [45.751574, 37.573856],
-                zoom = 10,
-                lang = "ru_RU",
-                apiUrl = "https://api-maps.yandex.ru/2.1/?apikey",
+                center = yandexMapDefaults.center,
+                zoom = yandexMapDefaults.zoom,
+                lang = yandexMapDefaults.lang,
+                apiUrl = yandexMapDefaults.apiUrl,
                 classNames,
                 iconShapeCfg,
                 delayForHint = 5000,

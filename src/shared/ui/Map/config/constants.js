@@ -7,6 +7,13 @@ import {
   TheatreIcon,
 } from "#shared/ui/Icons/index.js";
 
+export const yandexMapDefaults = {
+  center: [45.751574, 37.573856],
+  zoom: 10,
+  lang: "ru_RU",
+  apiUrl: "https://api-maps.yandex.ru/2.1/?apikey",
+};
+
 export const classNames = {
   ballonContent: "yandexMap__ballonContent",
   ballonLayout: "yandexMap__ballonLayout",
