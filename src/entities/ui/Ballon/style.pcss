@@ -39,4 +39,41 @@
         }
     }
 }
+
+.ballon {
+
+    &__body {
+        padding: 2rem;
+    }
+
+    &__description {
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+        margin-right: 1rem;
+    }
+
+    &__header {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    &__buttons {
+        display: flex;
+        justify-content: space-between;
+
+        &__button {
+            padding: 0.5rem;
+
+            &__icon {
+                height: 2.5rem;
+                color: var(--btnIconColor);
+            }
+        }
+    }
+}
+
+
+
 /* eslint-enable */

@@ -40,13 +40,15 @@ export const Ballon = (info, buttons = []) => {
           </div>`
             : ""
     }
-    <div class="ballon-body">
-      <div class="ballon-description">
-        <h3>${title}</h3>
-        <div>${iconsPresets[type]}</div>
-        <p>${street}, ${house}</p>
-        <p>${comment}</p>
-        <div class="ballon-buttons">
+    <div class="ballon__body">
+      <div class="ballon__description">
+        <div class="ballon__header">
+            <h3>${title}</h3>
+            <div>${iconsPresets[type]}</div>
+            <p>${street}, ${house}</p>
+        </div>
+        <p class="ballon__comment">${comment}</p>
+        <div class="ballon__buttons">
           ${buttons.join("")}
         </div>
       </div>
