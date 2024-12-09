@@ -213,11 +213,9 @@ export class YandexMap {
   showHint() {
     if (!this.containerMap) return;
 
-    // Создаем элемент подсказки
     const hintElement = document.createElement("div");
     hintElement.className = `${this.classNames.hintContainer}`;
 
-    // Добавляем иконку и текст
     hintElement.innerHTML = `
     <div class="${this.classNames.hintIcon}">${this.iconsPresets["centerMarker"]}</div>
     <div class="${this.classNames.hintText}">
@@ -239,6 +237,18 @@ export class YandexMap {
     if (!hintElement || !this.containerMap) return;
 
     const hintIcon = hintElement.querySelector(`.${this.classNames.hintIcon}`);
+    const hintText = hintElement.querySelector(`.${this.classNames.hintText}`);
+
+    if (hintText) {
+      requestAnimationFrame(() => {
+        hintText.style.opacity = '0';
+      });
+
+      hintText.addEventListener('transitionend', () => {
+        hintText.remove();
+      }, { once: true });
+    }
+
     if (hintIcon) {
       requestAnimationFrame(() => {
         hintIcon.classList.add(`${this.classNames.hintIcon}--shifted`);
