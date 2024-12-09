@@ -29,9 +29,7 @@ export class CustomSelect {
                 choice: (classNames, data) => {
                     const icon = data.customProperties?.icon || '';
                     return template(`
-                    <div class="choices__item customSelect__choice choices__item--selectable" data-select-text="${this.config.itemSelectText}" data-choice data-id="${data.id}" data-value="${data.value}" ${
-                        data.groupId > 0 ? 'role="treeitem"' : 'role="option"'
-                    }>
+                    <div class="choices__item customSelect__choice choices__item--selectable" data-select-text="${this.config.itemSelectText}" data-choice data-id="${data.id}" data-value="${data.value}" role="option">
                         ${icon}<span class="customSelect__label">${data.label}</span>
                     </div>
                 `);

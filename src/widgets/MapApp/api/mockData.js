@@ -7,7 +7,7 @@ export const filerCfg = {
     },
     bars: {
       value: null,
-      isChecked: true, // Активен по умолчанию
+      isChecked: true,
       isDisabled: false,
     },
     restaurant: {

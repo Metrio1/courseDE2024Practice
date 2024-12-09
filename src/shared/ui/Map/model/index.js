@@ -143,7 +143,6 @@ export class YandexMap {
         }
     );
 
-    // Показываем подсказку перед добавлением центральной метки
     this.showHint();
 
     this.#bindEvents();
@@ -169,7 +168,6 @@ export class YandexMap {
           }
         });
       });
-      // Возвращаем карту, если успешно инициализирована
       return this.instance;
     } catch (error) {
       console.error("Ошибка при загрузке API Яндекс.Карт:", error);
@@ -228,15 +226,12 @@ export class YandexMap {
     </div>
   `;
 
-    // Добавляем подсказку на карту
     this.containerMap.appendChild(hintElement);
 
-    // Применяем анимацию
     requestAnimationFrame(() => {
       hintElement.classList.add(`${this.classNames.hintVisible}`);
     });
 
-    // Устанавливаем таймер для скрытия
     setTimeout(() => this.hideHint(hintElement), this.delayForHint ?? 5000);
   }
 
@@ -250,15 +245,12 @@ export class YandexMap {
       });
     }
 
-    // Удаляем класс видимости
     hintElement.classList.remove(`${this.classNames.hintVisible}`);
 
-    // Удаляем элемент после завершения анимации
     hintElement.addEventListener(
         "transitionend",
         () => {
           hintElement.remove();
-          // Добавляем центральную метку после завершения анимации
           this.addCenterMarker();
         },
         { once: true }

@@ -34,7 +34,7 @@ export class MapApp {
   async initMap() {
     try {
       await this.yandexMap.initMap();
-      this.updateMapFilters(); // Применяем фильтры при инициализации
+      this.updateMapFilters();
       const markers = await this.getMarks();
       this.storeService.updateStore("setMarkers", markers);
       this.yandexMap.renderMarks(this.getFilteredMarkers());

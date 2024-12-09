@@ -27,9 +27,7 @@
     transform: translate(-50%, -50%);
     color: white;
     pointer-events: none;
-    //transition: opacity 0.4s, transform 0.4s;
 
-    /* Псевдоэлемент для фона */
     &::before {
       content: '';
       position: absolute;
@@ -37,11 +35,11 @@
       left: 0;
       width: 100%;
       height: 100%;
-      border-radius: inherit; /* Наследование радиуса */
+      border-radius: inherit;
       background: var(--colorBlack);
-      opacity: 0; /* Прозрачность применяем сюда */
+      opacity: 0;
       transition: opacity 0.3s, transform 0.3s;
-      z-index: -1; /* Помещаем фон под содержимое */
+      z-index: -1;
     }
 
     &-icon {
