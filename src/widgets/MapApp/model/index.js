@@ -58,26 +58,21 @@ export class MapApp {
 
     if (updatedFilters?.search?.value) {
       const address = updatedFilters.search.value;
-      this.handleCenterMapByAddress(address); // Center map on entered address
+      this.handleCenterMapByAddress(address);
     }
 
     const currentState = this.storeService.getFilters().inputs;
     const updatedState = { ...currentState, ...newFilters };
-    // Update store with new filters
     this.storeService.updateStore("setFilters", { inputs: updatedState });
 
-    // Get filtered markers
     const filteredMarkers = this.getFilteredMarkers();
     console.log("Filtered markers:", filteredMarkers);
 
-    // Render filtered markers on the map
     this.yandexMap.renderMarks(filteredMarkers);
   }
 
-  // Загрузка и применение конфигурации фильтров
 
 
-  // Получение меток с сервера
   async getMarks() {
     try {
       const response = await this.apiClient.get(API_ENDPOINTS.marks.list);
@@ -88,7 +83,6 @@ export class MapApp {
     }
   }
 
-  // Получение конфигурации фильтров
   loadAndUpdateFilters() {
     (async () => {
       try {
@@ -107,7 +101,6 @@ export class MapApp {
         .then((res) => res?.data);
   }
 
-  // Фильтрация меток
   getFilteredMarkers() {
     const filters = this.storeService.getFilters().inputs;
 
@@ -129,7 +122,6 @@ export class MapApp {
     });
   }
 
-  // Центрирование карты по адресу
   async handleCenterMapByAddress(address) {
     try {
       const response = await fetch(
@@ -155,7 +147,6 @@ export class MapApp {
     }
   }
 
-  // Подписка на изменения в StoreService
   subscribeForStoreService() {
     this.markerSubscription = this.storeService.subscribeToMarkers(() =>
         this.handleMarkersChangedInStore()
@@ -165,13 +156,11 @@ export class MapApp {
     );
   }
 
-  // Отписка от изменений StoreService
   unsubscribeFromStoreService() {
     this.markerSubscription?.();
     this.filterSubscription?.();
   }
 
-  // События Yandex карты
   #bindYandexMapEvents() {
     this.yandexMap?.containerMap?.addEventListener(
         yandexMapCustomEventNames.markClicked,
@@ -179,7 +168,6 @@ export class MapApp {
     );
   }
 
-  // Обработчик кликов по меткам
   async handleMarkerClick(event) {
     const { id, mark } = event.detail;
     try {
@@ -196,13 +184,11 @@ export class MapApp {
     }
   }
 
-  // Обработка изменений меток в Store
   handleMarkersChangedInStore() {
     const markers = this.getFilteredMarkers();
     this.yandexMap.renderMarks(markers);
   }
 
-  // Обработка изменений фильтров в Store
   handleFiltersChangedInStore() {
     const markers = this.getFilteredMarkers();
     this.yandexMap.renderMarks(markers);

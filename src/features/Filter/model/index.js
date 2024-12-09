@@ -1,8 +1,5 @@
 import { getDebouncedFn } from "#shared/lib/utils";
 
-/**
- *
- */
 export class FilterManager {
   constructor({
                 filterGroupName,
@@ -17,19 +14,22 @@ export class FilterManager {
       parentName: "data-js-filter-parent-name",
       ...customAttributes,
     };
+
     this.filterGroupName = filterGroupName;
     this.onFilterChange = onFilterChange;
     this.filtersConfig = filtersConfig;
     this.debounceDelay = debounceDelay;
 
-
-    this.filterContainer = document.querySelector(
-        `[${this.customAttributes.container}="${this.filterGroupName}"]`
+    this.filterContainers = Array.from(
+        document.querySelectorAll(
+            `[${this.customAttributes.container}="${this.filterGroupName}"]`
+        )
     );
-    if (!this.filterContainer) return;
+
+    if (!this.filterContainers.length) return;
 
     this.debouncedHandleInput = getDebouncedFn(
-        this.#handleInput,
+        this.#handleInput.bind(this),
         this.debounceDelay
     );
 
@@ -38,86 +38,84 @@ export class FilterManager {
   }
 
   #initializeFilters() {
-    Object.entries(this.filtersConfig).forEach(([name, config]) => {
-      const filterElement = this.#getFilterElement(name);
-      if (!filterElement) return;
+    this.filterContainers.forEach((container) => {
+      Object.entries(this.filtersConfig).forEach(([name, config]) => {
+        const filterElement = this.#getFilterElement(container, name);
+        if (!filterElement) return;
 
-      if (filterElement.type === "checkbox" || filterElement.type === "radio") {
-        filterElement.checked = config.isChecked || false;
-      } else if (
-          filterElement.type === "text" ||
-          filterElement.tagName === "INPUT"
-      ) {
-        filterElement.value = config.persistent ? config.value || "" : "";
-      }
+        if (["checkbox", "radio"].includes(filterElement.type)) {
+          filterElement.checked = config.isChecked || false;
+        } else if (filterElement.type === "text" || filterElement.tagName === "INPUT") {
+          filterElement.value = config.persistent ? config.value || "" : "";
+        }
+      });
     });
   }
 
   #bindEvents() {
-    this.filterContainer.addEventListener("input", this.debouncedHandleInput);
-    this.filterContainer.addEventListener("change", (event) =>
-        this.#handleChange(event)
-    );
+    this.filterContainers.forEach((container) => {
+      container.addEventListener("input", this.debouncedHandleInput);
+      container.addEventListener("change", (e) => this.#handleChange(e));
+    });
   }
 
-  #getFilterElement(filterName) {
-    return this.filterContainer.querySelector(
+  #getFilterElement(container, filterName) {
+    return container.querySelector(
         `[${this.customAttributes.filterItem}="${filterName}"]`
     );
   }
 
-  #handleInput = (event) => {
+  #handleInput(event) {
     this.#processFilterChange(event.target);
-  };
+  }
 
-  #handleChange = (event) => {
+  #handleChange(event) {
     this.#processFilterChange(event.target);
-  };
+  }
 
   #processFilterChange(target) {
-    console.log("Target element:", target);
-
     const filterName = target.getAttribute(this.customAttributes.filterItem);
     const parentName = target.getAttribute(this.customAttributes.parentName);
 
-    console.log("Filter changed:", { filterName, parentName, checked: target.checked });
-
     if (parentName !== this.filterGroupName || !filterName) {
-      console.error("Invalid filter or parent name:", { filterName, parentName });
+      console.warn("Неверный фильтр или имя родителя:", { filterName, parentName });
       return;
     }
 
     const updatedFilter = {
       [filterName]: {
-        value:
-            target.type === "checkbox" || target.type === "radio"
-                ? null
-                : target.value,
-        isChecked:
-            target.type === "checkbox" || target.type === "radio"
-                ? target.checked
-                : false,
+        value: target.type === "checkbox" || target.type === "radio" ? null : target.value,
+        isChecked: target.type === "checkbox" || target.type === "radio" ? target.checked : false,
         isDisabled: target.disabled || false,
       },
     };
 
-    this.onFilterChange?.(updatedFilter);
+    this.filtersConfig = {
+      ...this.filtersConfig,
+      ...updatedFilter,
+    };
+
+    this.onFilterChange?.(this.filtersConfig);
+
+    // Dispatch custom event for external subscribers
+    const event = new CustomEvent("filtersUpdated", {
+      detail: {
+        filterGroupName: this.filterGroupName,
+        filters: this.filtersConfig,
+      },
+    });
+    document.dispatchEvent(event);
   }
 
   applyFilters(newConfig) {
-
-      //TODO: опять подвязка на inputs. Нужно подумать над этим
-      if (!newConfig.inputs) {
-      console.warn("Не переданы данные фильтров.");
-      return;
-  }
-
     this.filtersConfig = { ...this.filtersConfig, ...newConfig };
     this.#initializeFilters();
   }
 
   destroy() {
-    this.filterContainer.removeEventListener("input", this.debouncedHandleInput);
-    this.filterContainer.removeEventListener("change", this.#handleChange);
+    this.filterContainers.forEach((container) => {
+      container.removeEventListener("input", this.debouncedHandleInput);
+      container.removeEventListener("change", this.#handleChange);
+    });
   }
 }
