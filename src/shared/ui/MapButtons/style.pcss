@@ -3,8 +3,14 @@
     flex-direction: column;
     gap: 1rem;
 
+    @media (max-width: 1024px) {
+        flex-direction: row;
+    }
+
     &__button {
+        width: 100%;
         border: none;
+        white-space: nowrap;
         background-color: var(--colorWhite);
         border-radius: 1rem;
         display: flex;
@@ -14,6 +20,10 @@
         align-items: center;
         transition: var(--transition);
         cursor: pointer;
+
+        @media (max-width: 1024px) {
+            justify-content: center;
+        }
 
         &:hover {
             background-color: var(--colorGrayLight);
