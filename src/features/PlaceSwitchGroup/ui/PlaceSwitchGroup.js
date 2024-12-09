@@ -15,7 +15,6 @@ export const PlaceSwitchGroup = ({
   extraAttrs = [],
   switchConfig = switchConfigDefault,
 } = {}) => {
-  // Рендерим каждый Switch по конфигу
   const switchElements = switchConfig
     .map(
       ({ label, name, checked, dataJsFilterItem, dataJsFilterParentName }) => {

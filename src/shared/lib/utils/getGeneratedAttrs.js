@@ -1,7 +1,5 @@
 /**
  * Генерирует атрибуты для компонентов
- * @param {Array} attributes - Массив атрибутов в формате [{ name, value } или строка]
- * @return {String} Сформированные атрибуты
  */
 export const getGeneratedAttrs = (attributes = []) => {
     return attributes

@@ -15,8 +15,8 @@ export const handlers = [
   ...marksDetailMockResponse.map((markInfo) => {
     return getResponseMock({
       type: "GET",
-      endpoint: `${API_ENDPOINTS.marks.detail}`, // Убираем query-параметр из endpoint
-      queryParams: { id: markInfo.id }, // Передаем параметр id для проверки
+      endpoint: `${API_ENDPOINTS.marks.detail}`,
+      queryParams: { id: markInfo.id },
       data: markInfo,
     });
   }),

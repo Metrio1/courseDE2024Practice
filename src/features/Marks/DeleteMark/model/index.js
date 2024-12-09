@@ -15,10 +15,6 @@ export class DeleteMarkModel {
       this.#initEventListeners();
   }
 
-  /**
-   * Обработчик события удаления метки.
-   * @param {Event} event - Событие клика.
-   */
   #handleDeleteMark = async (event) => {
     const button = event.target.closest(DeleteMarkModel.selectors.deleteMarkBtn);
 
@@ -51,10 +47,6 @@ export class DeleteMarkModel {
     });
   };
 
-  /**
-   * Удаление метки по ID.
-   * @param {string} markId - Идентификатор метки.
-   */
   async #deleteMarkById(markId) {
     try {
       await deleteMark(markId);

@@ -16,11 +16,9 @@ export const createStore = (storageName) => {
           setMarkers: (markers) => set({ markers }),
           addMarker: (marker) => {
             set((state) => {
-              // Проверка, если маркер с таким ID уже существует, обновляем его
               const updatedMarkers = state.markers.map((m) =>
                 m.id === marker.id ? { ...m, ...marker } : m
               );
-              // Если маркер не найден, добавляем новый
               if (updatedMarkers.every((m) => m.id !== marker.id)) {
                 updatedMarkers.push(marker);
               }
@@ -29,10 +27,8 @@ export const createStore = (storageName) => {
           },
           addMarkers: (newMarkers) => {
             set((state) => {
-              // Для каждого маркера в списке проверяем, существует ли уже маркер с таким id
               const updatedMarkers = [...state.markers];
               newMarkers.forEach((marker) => {
-                // Если маркер с таким id уже существует, обновляем его
                 const markerIndex = updatedMarkers.findIndex(
                   (m) => m.id === marker.id
                 );
@@ -42,7 +38,6 @@ export const createStore = (storageName) => {
                     ...marker,
                   };
                 } else {
-                  // Если маркера нет, добавляем новый
                   updatedMarkers.push(marker);
                 }
               });
@@ -76,7 +71,7 @@ export const createStore = (storageName) => {
         }),
 
         {
-          name: storageName, // Используем переданное имя хранилища
+          name: storageName,
           getStorage: () => localStorage,
         }
       )

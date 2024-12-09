@@ -15,7 +15,6 @@ import {MapButtons} from "#shared/ui/MapButtons/ui/MapButtons.js";
 
 /**
  * Страница приложения
- * @return {string}
  */
 const IndexPage = () => `
   <!DOCTYPE html>

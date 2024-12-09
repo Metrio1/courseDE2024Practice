@@ -97,7 +97,6 @@ export class FilterManager {
 
     this.onFilterChange?.(this.filtersConfig);
 
-    // Dispatch custom event for external subscribers
     const event = new CustomEvent("filtersUpdated", {
       detail: {
         filterGroupName: this.filterGroupName,

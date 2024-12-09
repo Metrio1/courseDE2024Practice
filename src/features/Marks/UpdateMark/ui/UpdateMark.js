@@ -3,7 +3,6 @@ import { PencilIcon } from "#shared/ui/Icons";
 
 /**
  * Кнопка для открытия модалки для обновления метки
- * @return {String}
  */
 export const UpdateMarkBtn = ({
   markInfo,

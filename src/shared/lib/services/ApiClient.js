@@ -8,7 +8,6 @@ export class ApiClient {
     return ApiClient.instance || (ApiClient.instance = this);
   }
 
-  // Преобразование объекта параметров в строку запроса
   serializeParams(params) {
     return new URLSearchParams(params).toString();
   }
@@ -27,7 +26,7 @@ export class ApiClient {
         break;
       case contentType.includes("application/xml") ||
       contentType.includes("text/xml"):
-        responseData = await response.text(); // Можно использовать XMLParser для парсинга
+        responseData = await response.text();
         break;
       case contentType.includes("image/") ||
       contentType.includes("application/octet-stream"):
@@ -47,7 +46,6 @@ export class ApiClient {
       headers = {},
       contentType = "application/json"
   ) {
-    //Формируем полный URL запроса
     const url = `${this.baseURL}/${endpoint}`;
     const options = {
       method,

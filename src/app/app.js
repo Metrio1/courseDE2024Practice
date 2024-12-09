@@ -2,7 +2,6 @@ import "./styles.js";
 import { DeleteMarkModel } from "#features/Marks/DeleteMark/model/index.js";
 import { UpdateMarkModel } from "#features/Marks/UpdateMark/model/index.js";
 import { API_URL } from "#shared/config/constants";
-import { ModalManager } from "#shared/lib/plugins/ModalManager.js";
 import { FormHandler } from "#shared/lib/plugins/formHandler.js";
 import { ApiClient } from "#shared/lib/services/ApiClient.js";
 import { CustomSelect } from "#shared/ui/CustomSelect/model/index.js";

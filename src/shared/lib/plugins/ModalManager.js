@@ -19,8 +19,8 @@ export class ModalManager {
     }
 
     this.defaultOptions = {
-      animationClass: "fade", // Класс для анимации
-      trapFocus: false, // Настройка фокуса
+      animationClass: "fade",
+      trapFocus: false,
       defaultType: "html",
       ...options,
     };
