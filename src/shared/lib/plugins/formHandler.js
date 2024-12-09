@@ -50,7 +50,6 @@ export class FormHandler {
     try {
       const apiClient = new ApiClient();
 
-      // Выбираем метод ApiClient в зависимости от запроса
       let response;
       if (method.toUpperCase() === "GET") {
         const params = Object.fromEntries(data.entries());

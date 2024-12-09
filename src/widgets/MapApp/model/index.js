@@ -8,14 +8,12 @@ export class MapApp {
     this.storeService = storeService;
     this.apiClient = apiClient;
 
-    // Создаем экземпляр FilterManager с обновленной логикой
     this.filterManager = new FilterManager({
       filterGroupName: "marks",
       onFilterChange: this.updateMapFilters.bind(this),
       filtersConfig: this.storeService.getFilters(),
     });
 
-    // Инициализация карты
     this.yandexMap = new YandexMap({
       containerSelector: "#map1",
       apiUrl: "https://api-maps.yandex.ru/2.1/?apikey",
@@ -33,7 +31,6 @@ export class MapApp {
     });
   }
 
-  // Метод инициализации карты
   async initMap() {
     try {
       await this.yandexMap.initMap();
@@ -46,15 +43,12 @@ export class MapApp {
     }
   }
 
-  // Обновление меток на основе фильтров
   updateMapFilters(updatedFilters) {
     const currentFilters = this.storeService.getFilters();
 
-    // Log current and updated filters
     console.log("Current filters before update:", currentFilters);
     console.log("Updated filters:", updatedFilters);
 
-    // Merge current and updated filters
     const newFilters = {
       ...currentFilters,
       ...updatedFilters,
@@ -62,7 +56,6 @@ export class MapApp {
 
     console.log("Merged filters:", newFilters);
 
-    // Check for address filter
     if (updatedFilters?.search?.value) {
       const address = updatedFilters.search.value;
       this.handleCenterMapByAddress(address); // Center map on entered address
