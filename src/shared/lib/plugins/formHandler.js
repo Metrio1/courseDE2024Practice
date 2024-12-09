@@ -1,6 +1,6 @@
 // import { ApiClient } from "../services/ApiClient.js";
-
 import { ModalManager } from "./ModalManager.js";
+import {ApiClient} from "#shared/lib/services/ApiClient.js";
 
 /**
  * Класс для отправки данных с формы
@@ -25,10 +25,10 @@ export class FormHandler {
     return FormHandler.instance;
   }
 
-  #handleSubmit(e) {
+  async #handleSubmit(e) {
     const { target, submitter } = e;
     if (!target.hasAttribute(`${this.attrs.form}`)) return;
-    if (!target.tagName.toLowerCase() === "form") return;
+    if (target.tagName.toLowerCase() !== "form") return;
 
     const cfg = JSON.parse(target.getAttribute(this.attrs.form));
     const {
@@ -46,40 +46,49 @@ export class FormHandler {
     }
 
     submitter.disabled = true;
-    //TODO: а что делать с get запросами?) сериализация в url + лучше использовать APICLIENT
-    fetch(url, {
-      method,
-      body: data,
-    })
-      .then((res) => {
-        if (showModalAfterSuccess) {
-          ModalManager.getInstance().closeAll();
-          ModalManager.getInstance().open(showModalAfterSuccess, {
-            type: "inline",
-          });
-        }
-        if (redirectUrlAfterSuccess) {
-          if (delayBeforeRedirect) {
-            setTimeout(() => {
-              location.href = redirectUrlAfterSuccess;
-            }, delayBeforeRedirect);
-          } else {
+
+    try {
+      const apiClient = new ApiClient();
+
+      // Выбираем метод ApiClient в зависимости от запроса
+      let response;
+      if (method.toUpperCase() === "GET") {
+        const params = Object.fromEntries(data.entries());
+        response = await apiClient.get(url, params);
+      } else {
+        response = await apiClient[method.toLowerCase()](url, data);
+      }
+
+      if (showModalAfterSuccess) {
+        ModalManager.getInstance().closeAll();
+        ModalManager.getInstance().open(showModalAfterSuccess, {
+          type: "inline",
+        });
+      }
+
+      if (redirectUrlAfterSuccess) {
+        if (delayBeforeRedirect) {
+          setTimeout(() => {
             location.href = redirectUrlAfterSuccess;
-          }
+          }, delayBeforeRedirect);
+        } else {
+          location.href = redirectUrlAfterSuccess;
         }
-      })
-      .finally(() => {
-        submitter.disabled = false;
-      });
+      }
+    } catch (error) {
+      console.error("Ошибка при отправке формы:", error);
+    } finally {
+      submitter.disabled = false;
+    }
   }
 
   #bindEvents() {
     document.addEventListener(
-      "submit",
-      (e) => {
-        this.#handleSubmit(e);
-      },
-      true
+        "submit",
+        (e) => {
+          this.#handleSubmit(e);
+        },
+        true
     );
   }
 }

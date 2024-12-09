@@ -28,7 +28,7 @@ export class UpdateMarkModel {
       ModalManager.getInstance().open(
           getUpdateMarkModalContent({
             markInfo,
-            url: `${API_URL}/${API_ENDPOINTS.marks.update}`,
+            url: `${API_ENDPOINTS.marks.update}`,
           }),
           {
             on: {
