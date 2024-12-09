@@ -46,15 +46,11 @@ export class MapApp {
   updateMapFilters(updatedFilters) {
     const currentFilters = this.storeService.getFilters();
 
-    console.log("Current filters before update:", currentFilters);
-    console.log("Updated filters:", updatedFilters);
 
     const newFilters = {
       ...currentFilters,
       ...updatedFilters,
     };
-
-    console.log("Merged filters:", newFilters);
 
     if (updatedFilters?.search?.value) {
       const address = updatedFilters.search.value;
@@ -66,7 +62,6 @@ export class MapApp {
     this.storeService.updateStore("setFilters", { inputs: updatedState });
 
     const filteredMarkers = this.getFilteredMarkers();
-    console.log("Filtered markers:", filteredMarkers);
 
     this.yandexMap.renderMarks(filteredMarkers);
   }
