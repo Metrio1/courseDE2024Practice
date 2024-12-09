@@ -25,7 +25,7 @@ export class DeleteMarkModel {
 
     const handleDelete = async () => {
       try {
-        await deleteMark(markId); // Попытка удалить метку через API
+        await deleteMark(markId);
         this.storeService.updateStore(
           "setMarkers",
           this.storeService.getMarkers().filter((item) => item.id !== markId)

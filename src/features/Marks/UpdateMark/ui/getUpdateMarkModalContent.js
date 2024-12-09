@@ -25,7 +25,7 @@ export const getUpdateMarkModalContent = ({
   const formattedAddress = [city, street, house].filter(Boolean).join(", ");
 
   return `<div class="updateModalContent" >
-  <form class="updateModalContent__form" data-js-form=${JSON.stringify({ url, method, showModalAfterSuccess: "#modalSuccess", redirectUrlAfterSuccess: "/test.html", delayBeforeRedirect: 3000 })}>
+  <form class="updateModalContent__form" data-js-form=${JSON.stringify({ url, method, showModalAfterSuccess: "#modalSuccess" })}>
     <h3>Редактировать метку</h3>
     <p>${formattedAddress}</p>
     <div class="updateModalContent__formBody">

@@ -36,8 +36,6 @@ export class FormHandler {
       method = "POST",
       showModalAfterSuccess,
       preventDefault = true,
-      redirectUrlAfterSuccess,
-      delayBeforeRedirect,
     } = cfg;
     const data = new FormData(target);
 
@@ -65,15 +63,6 @@ export class FormHandler {
         });
       }
 
-      if (redirectUrlAfterSuccess) {
-        if (delayBeforeRedirect) {
-          setTimeout(() => {
-            location.href = redirectUrlAfterSuccess;
-          }, delayBeforeRedirect);
-        } else {
-          location.href = redirectUrlAfterSuccess;
-        }
-      }
     } catch (error) {
       console.error("Ошибка при отправке формы:", error);
     } finally {

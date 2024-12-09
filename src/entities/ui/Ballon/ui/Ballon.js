@@ -1,4 +1,3 @@
-import { BallonButtons } from "#shared/ui/Map/ui/BallonButtons.js";
 import {iconsPresets} from "#shared/ui/Map/config/constants.js";
 
 /**
