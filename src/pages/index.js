@@ -33,7 +33,7 @@ const IndexPage = () => `
               ${PlaceSwitchGroup()}
           </aside>
             <div class="mapLayout__map">
-              <div id="map1" class="yandexMap" style="width: 1407px; height: 658px;"></div>
+              <div id="map1" class="yandexMap" style="width: 100vw; height: 80vh;"></div>
               ${MapButtons({
             buttons: [
               { text: "Добавить метку", iconSlot: LocationIcon() },
