@@ -16,6 +16,7 @@ import {iconsPresets} from "#shared/ui/Map/config/constants.js";
 export const Ballon = (info, buttons = []) => {
     const {
         type,
+        typeLabel,
         title,
         comment,
         images,
@@ -43,7 +44,7 @@ export const Ballon = (info, buttons = []) => {
       <div class="ballon__description">
         <div class="ballon__header">
             <h3>${title}</h3>
-            <div>${iconsPresets[type]}</div>
+            <div class="ballon__label">${iconsPresets[type]} <p>${typeLabel}</p></div>
             <p>${street}, ${house}</p>
         </div>
         <p class="ballon__comment">${comment}</p>

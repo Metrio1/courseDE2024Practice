@@ -306,6 +306,7 @@ export class YandexMap {
   getLayoutContentForBallon(id, info) {
     const {
       type,
+        typeLabel,
       title,
         comment,
         images,

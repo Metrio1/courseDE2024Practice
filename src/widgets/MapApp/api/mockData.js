@@ -48,6 +48,7 @@ export const marksDetailMockResponse = [
     id: "1",
     title: "Al Capone",
     type: "bars",
+    typeLabel: "Бар",
     address: {
       city: "Челябинск",
       house: "12a",
@@ -66,6 +67,7 @@ export const marksDetailMockResponse = [
     id: "2",
     title: "Al Capone 2",
     type: "restaurant",
+    typeLabel: "Ресторан",
     address: {
       city: "Челябинск 2",
       house: "12a",
@@ -84,6 +86,7 @@ export const marksDetailMockResponse = [
     id: "3",
     title: "Al Capone 2",
     type: "club",
+    typeLabel: "Клуб",
     address: {
       city: "Челябинск 2",
       house: "12a",
@@ -102,6 +105,7 @@ export const marksDetailMockResponse = [
     id: "4",
     title: "Al Capone 3",
     type: "theatre",
+    typeLabel: "Театр",
     address: {
       city: "Челябинск 2",
       house: "12a",
@@ -120,6 +124,7 @@ export const marksDetailMockResponse = [
     id: "5",
     title: "Al Capone 4",
     type: "cinema",
+    typeLabel: "Кинотеатр",
     address: {
       city: "Челябинск 2",
       house: "12a",
