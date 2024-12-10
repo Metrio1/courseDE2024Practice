@@ -34,10 +34,10 @@ export const iconShapeCfg = {
 
 export const iconsPresets = {
   bars: BarIcon({ iconColor: "var(--colorRed)" }),
-  cinema: CinemaIcon({ iconColor: "var(--colorRed)" }),
-  theatre: TheatreIcon({ iconColor: "var(--colorRed)" }),
-  restaurant: RestIcon({ iconColor: "var(--colorRed)" }),
-  club: MusicIcon({ iconColor: "var(--colorRed)" }),
+  cinema: CinemaIcon({ iconColor: "var(--colorGreen)" }),
+  theatre: TheatreIcon({ iconColor: "var(--colorPurple)" }),
+  restaurant: RestIcon({ iconColor: "var(--colorOrange)" }),
+  club: MusicIcon({ iconColor: "var(--colorBlue)" }),
   centerMarker: CenterMapIcon({ iconColor: "var(--colorGray)" }),
 };
 
