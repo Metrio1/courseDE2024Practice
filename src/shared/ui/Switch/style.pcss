@@ -6,13 +6,13 @@
   --switchBorderRadius: 7rem;
   --switchCircleWidth: 2.5rem;
   --switchCircleHeight: 2.5rem;
-  --switckCircleColor: var(--colorWhite);
+  --switchCircleColor: var(--colorWhite);
   --switchTransition: all 0.4s;
-  --swithTypeDisplay: inline-flex;
+  --switchTypeDisplay: inline-flex;
   --switchFlexDirection: row;
   --switchGap: 1rem;
   position: relative;
-  display: var(--swithTypeDisplay);
+  display: var(--switchTypeDisplay);
   align-items: center;
   flex-direction: var(--switchFlexDirection);
   gap: var(--switchGap);
@@ -22,7 +22,7 @@
     --switchGap: 0;
   }
 
-  &__wrapper  {
+  &__wrapper {
     display: flex;
     align-items: center;
   }
@@ -36,7 +36,7 @@
     height: var(--switchHeight);
     position: relative;
     cursor: pointer;
-    background-color: var(--colorGray);
+    background-color: var(--switchBgColor);
     border-radius: var(--switchBorderRadius);
     transition: var(--switchTransition);
 
@@ -45,7 +45,7 @@
       position: absolute;
       width: var(--switchCircleWidth);
       height: var(--switchCircleHeight);
-      background-color: var(--switckCircleColor);
+      background-color: var(--switchCircleColor);
       border-radius: 50%;
       top: 2px;
       left: 2px;
@@ -60,7 +60,7 @@
 
       &::before {
         transform: translateX(
-          calc(var(--switchWidth) - var(--switchCircleWidth) - 4px)
+                calc(var(--switchWidth) - var(--switchCircleWidth) - 4px)
         );
       }
     }

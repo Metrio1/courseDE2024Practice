@@ -1,7 +1,13 @@
 .mapButtons {
+    --mapButtonsGap: 1rem;
+    --mapButtonPadding: 1.5rem 2rem;
+    --mapButtonFontSize: 2rem;
+    --mapButtonBorderRadius: 1rem;
+    --mapButtonHoverBgColor: var(--colorGrayLight);
+
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--mapButtonsGap);
 
     @media (max-width: 1024px) {
         flex-direction: row;
@@ -12,11 +18,11 @@
         border: none;
         white-space: nowrap;
         background-color: var(--colorWhite);
-        border-radius: 1rem;
+        border-radius: var(--mapButtonBorderRadius);
         display: flex;
-        gap: 1rem;
-        padding: 1.5rem 2rem;
-        font-size: 2rem;
+        gap: var(--mapButtonsGap);
+        padding: var(--mapButtonPadding);
+        font-size: var(--mapButtonFontSize);
         align-items: center;
         transition: var(--transition);
         cursor: pointer;
@@ -26,7 +32,7 @@
         }
 
         &:hover {
-            background-color: var(--colorGrayLight);
+            background-color: var(--mapButtonHoverBgColor);
         }
     }
 }

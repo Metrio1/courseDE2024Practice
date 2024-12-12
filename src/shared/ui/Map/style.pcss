@@ -4,28 +4,54 @@
   --yandexMapBallonLayoutMinHeight: 15rem;
   --yandexMapBallonContentBgColor: var(--colorWhite);
   --yandexMapBallonLayoutPd: 2px;
-  position: relative;
+  --yandexMapHintContainerWidth: 54rem;
+  --yandexMapHintContainerHeight: 25.25rem;
+  --yandexMapHintContainerBorderRadius: 2rem;
+  --yandexMapHintContainerFontSize: 2.5rem;
+  --yandexMapHintContainerPadding: 4rem 7rem;
+  --yandexMapHintContainerColor: white;
+  --yandexMapHintContainerBeforeOpacity: 0;
+  --yandexMapHintContainerBeforeTransition: opacity 0.3s, transform 0.3s;
+  --yandexMapHintContainerIconWidth: 4rem;
+  --yandexMapHintContainerIconHeight: 4rem;
+  --yandexMapHintContainerIconShiftedTransform: translateY(5.6rem);
+  --yandexMapHintContainerTextOpacity: 1;
+  --yandexMapHintContainerTextTransition: transform 0.1s;
+  --yandexMapHintContainerVisibleBeforeOpacity: 0.4;
+  --yandexMapMarkBorderRadius: 50%;
+  --yandexMapMarkTransition: all 0.3s;
+  --yandexMapMarkBoxShadow: var(--boxShadowDefault);
+  --yandexMapBallonLayoutTranslate: calc(-50% + var(--yandexMapWidthPlacemark) / 2) calc(-100% - 2rem);
+  --yandexMapBallonLayoutBorderRadius: 2rem;
+  --yandexMapBallonLayoutBoxShadow: var(--boxShadowDefault);
+  --yandexMapBallonContentBorderRadius: 2rem;
+  --yandexMapBallonContentImgHeight: 19rem;
+  --yandexMapCenterMarkerWidth: 4rem;
+  --yandexMapCenterMarkerHeight: 4rem;
+  --yandexMapCenterMarkerOpacity: 1;
+  --yandexMapCenterMarkerTransition: opacity 0.3s, transform 0.3s;
 
+  position: relative;
   border-radius: 5rem;
   overflow: hidden;
 
   &__hintContainer {
     position: absolute;
     box-sizing: border-box;
-    width: 54rem;
-    height: 25.25rem;
-    border-radius: 2rem;
+    width: var(--yandexMapHintContainerWidth);
+    height: var(--yandexMapHintContainerHeight);
+    border-radius: var(--yandexMapHintContainerBorderRadius);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: 2.5rem;
+    font-size: var(--yandexMapHintContainerFontSize);
     text-align: center;
-    padding: 4rem 7rem;
+    padding: var(--yandexMapHintContainerPadding);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: white;
+    color: var(--yandexMapHintContainerColor);
     pointer-events: none;
 
     &::before {
@@ -37,14 +63,14 @@
       height: 100%;
       border-radius: inherit;
       background: var(--colorBlack);
-      opacity: 0;
-      transition: opacity 0.3s, transform 0.3s;
+      opacity: var(--yandexMapHintContainerBeforeOpacity);
+      transition: var(--yandexMapHintContainerBeforeTransition);
       z-index: -1;
     }
 
     &-icon {
-      width: 4rem;
-      height: 4rem;
+      width: var(--yandexMapHintContainerIconWidth);
+      height: var(--yandexMapHintContainerIconHeight);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -52,20 +78,20 @@
       transition: transform 0.3s;
 
       &--shifted {
-        transform: translateY(5.6rem);
+        transform: var(--yandexMapHintContainerIconShiftedTransform);
       }
     }
 
     &-text {
-      opacity: 1;
-      transition: transform 0.1s;
+      opacity: var(--yandexMapHintContainerTextOpacity);
+      transition: var(--yandexMapHintContainerTextTransition);
     }
 
     &--visible {
       pointer-events: all;
 
       &::before {
-        opacity: 0.4;
+        opacity: var(--yandexMapHintContainerVisibleBeforeOpacity);
       }
     }
   }
@@ -74,12 +100,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: var(--yandexMapWidthPlacemark, 4.625rem);
+    width: var(--yandexMapWidthPlacemark);
     background-color: var(--colorWhite);
-    border-radius: 50%;
+    border-radius: var(--yandexMapMarkBorderRadius);
     aspect-ratio: 1 / 1;
-    transition: all 0.3s;
-    box-shadow: var(--boxShadowDefault);
+    transition: var(--yandexMapMarkTransition);
+    box-shadow: var(--yandexMapMarkBoxShadow);
   }
 
   &__ballonLayout {
@@ -87,11 +113,10 @@
     width: var(--yandexMapBallonLayoutWidth);
     min-height: var(--yandexMapBallonLayoutMinHeight);
     background-color: var(--colorWhite);
-    translate: calc(-50% + var(--yandexMapWidthPlacemark) / 2)
-      calc(-100% - 2rem);
+    translate: var(--yandexMapBallonLayoutTranslate);
     padding: var(--yandexMapBallonLayoutPd);
-    border-radius: 2rem;
-    box-shadow: var(--boxShadowDefault);
+    border-radius: var(--yandexMapBallonLayoutBorderRadius);
+    box-shadow: var(--yandexMapBallonLayoutBoxShadow);
   }
 
   &__ballonContent {
@@ -99,11 +124,11 @@
     width: 100%;
     max-width: var(--yandexMapBallonLayoutWidth);
     overflow: hidden;
-    border-radius: 2rem;
+    border-radius: var(--yandexMapBallonContentBorderRadius);
 
     & img {
       width: 100%;
-      height: 19rem;
+      height: var(--yandexMapBallonContentImgHeight);
       object-fit: cover;
       display: block;
     }
@@ -111,15 +136,15 @@
 
   &__centerMarker {
     position: absolute;
-    width: 4rem;
-    height: 4rem;
+    width: var(--yandexMapCenterMarkerWidth);
+    height: var(--yandexMapCenterMarkerHeight);
     display: flex;
     align-items: center;
     justify-content: center;
     top: 50%;
     left: 50%;
-    opacity: 1;
+    opacity: var(--yandexMapCenterMarkerOpacity);
     transform: translate(-50%, -50%);
-    transition: opacity 0.3s, transform 0.3s;
+    transition: var(--yandexMapCenterMarkerTransition);
   }
 }

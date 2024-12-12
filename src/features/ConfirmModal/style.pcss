@@ -1,21 +1,31 @@
 .confirmModal {
-    width: 57rem;
-    height: 22.5rem;
-    box-shadow: var(--boxShadowDefault);
-    border-radius: 16px;
-    padding: 4rem;
+    --confirmModalWidth: 57rem;
+    --confirmModalHeight: 22.5rem;
+    --confirmModalBoxShadow: var(--boxShadowDefault);
+    --confirmModalBorderRadius: 16px;
+    --confirmModalPadding: 4rem;
+    --confirmModalMessageFontSize: 2.5rem;
+    --confirmModalMessageFontWeight: 700;
+    --confirmModalMessageColor: var(--colorBlack);
+    --confirmModalButtonsGap: 3rem;
+
+    width: var(--confirmModalWidth);
+    height: var(--confirmModalHeight);
+    box-shadow: var(--confirmModalBoxShadow);
+    border-radius: var(--confirmModalBorderRadius);
+    padding: var(--confirmModalPadding);
 
     &__message {
-        font-size: 2.5rem;
-        font-weight: 700;
+        font-size: var(--confirmModalMessageFontSize);
+        font-weight: var(--confirmModalMessageFontWeight);
         text-align: center;
-        color: var(--colorBlack);
+        color: var(--confirmModalMessageColor);
     }
 
     &__buttons {
         display: flex;
         justify-content: center;
         margin-top: auto;
-        gap: 3rem;
+        gap: var(--confirmModalButtonsGap);
     }
 }
